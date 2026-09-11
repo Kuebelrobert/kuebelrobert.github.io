@@ -21,18 +21,17 @@ bundle exec jekyll serve
 
 ## Writing a new post
 
-Add a file to `_posts/` named `YYYY-MM-DD-short-title.md` with front matter like:
+Add a file to `_posts/` named `YYYY-MM-DD-short-title.md` — this exact format is required by Jekyll for a file to be picked up as a post at all, and the date also drives the URL and sort order. Front matter looks like:
 
 ```yaml
 ---
 layout: post
 title: "Your Title Here"
-date: 2026-08-29
 categories: [Firmware]
 tags: [bootloader, flashing]
 ---
 ```
 
-See `_posts/2026-08-29-firmware-flashing-bootloader-design-patterns.md` for a full example.
+See `_posts/2026-08-29-garbage-collection-friend-or-enemy.md` for a full example.
 
 See `PLAN.md` for the full roadmap and content backlog.

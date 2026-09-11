@@ -1,10 +1,10 @@
 # SW Architecture Blog — Plan & Roadmap
 
-_Last updated: 2026-08-29_
+_Last updated: 2026-09-11_
 
 ## 1. Vision
 
-An English-language blog hosted on GitHub Pages, documenting practical experience and self-study knowledge around embedded systems software architecture. Core domains: Security, Flashing, Communication, RTOS, AutoSAR, Firmware, Debugging, AI, and Engineering Processes.
+An English-language blog hosted on GitHub Pages, documenting practical experience and self-study knowledge around embedded systems software architecture. Core domains: Security, Flashing, Communication, RTOS, AUTOSAR, Firmware, Debugging, AI, and Engineering Processes.
 
 ## 2. Tech Stack Decision
 
@@ -38,7 +38,7 @@ Use Jekyll `categories` (one primary) + `tags` (freeform) front matter on every 
 - Flashing
 - Communication
 - RTOS
-- AutoSAR
+- AUTOSAR
 - Firmware
 - Debugging
 - AI
@@ -58,11 +58,11 @@ Use Jekyll `categories` (one primary) + `tags` (freeform) front matter on every 
 
 ## 6. Content Backlog (seed ideas per domain)
 
-- **Firmware / Flashing:** Bootloader design patterns for MCUs *(first draft — in progress)*; secure vs. unsecure flashing flows; A/B / dual-bank update strategies
+- **Firmware / Flashing:** Garbage collection vs. firmware flashing conflicts *(published)*; Bootloader design patterns for MCUs *(previously drafted, currently removed from `_posts/` — recoverable from git history if it should be restored as a separate post)*; secure vs. unsecure flashing flows; A/B / dual-bank update strategies
 - **Security:** Secure Boot chain of trust; threat modeling for embedded products; common pitfalls in key storage on MCUs
 - **Communication:** UDS/diagnostics over CAN; comparing CAN, LIN, SPI, UART trade-offs in real projects
 - **RTOS:** Task priority design and priority inversion war stories; choosing between FreeRTOS/Zephyr/others
-- **AutoSAR:** Practical intro to AutoSAR layers for developers coming from bare-metal/RTOS backgrounds
+- **AUTOSAR:** Practical intro to AUTOSAR layers for developers coming from bare-metal/RTOS backgrounds
 - **Debugging:** JTAG/SWD debugging workflows; debugging intermittent hardware-timing bugs
 - **AI:** Where AI coding assistants actually help (and don't) in embedded/firmware work
 - **Engineering Processes:** Code review practices for safety-relevant embedded code; branching/release strategies for firmware
@@ -79,6 +79,7 @@ Use Jekyll `categories` (one primary) + `tags` (freeform) front matter on every 
 | Item | Status |
 |---|---|
 | Tech stack decided (Jekyll) | Done |
-| Repo scaffold | Drafted this session (not yet pushed to GitHub) |
-| First post draft (Firmware Flashing / Bootloader) | Drafted this session |
-| GitHub repo created & Pages enabled | Open — user action needed |
+| Repo scaffold | Done, pushed to GitHub |
+| First post: "Garbage Collection - friend or enemy" (Flashing) | Drafted, corrected, reviewed, and diagrammed — not yet committed/pushed |
+| Earlier "Bootloader Design Patterns" post | Was committed, then removed from `_posts/` during editing — still recoverable from git history; decide whether to restore as its own post |
+| GitHub repo created & Pages enabled | Done |

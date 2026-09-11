@@ -1,7 +1,7 @@
 title: Embedded Architecture Notes
 description: >-
   Notes on software architecture for embedded systems — security, flashing,
-  communication, RTOS, AutoSAR, firmware, debugging, AI, and engineering
+  communication, RTOS, AUTOSAR, firmware, debugging, AI, and engineering
   processes — drawn from professional work and self-study.
 author: Robert
 email: robert.koerner87@googlemail.com
@@ -21,6 +21,7 @@ minima:
   skin: dark
   nav_pages:
     - about.md
+    - books.md
     - categories.md
 
 permalink: /:categories/:year/:month/:day/:title/
