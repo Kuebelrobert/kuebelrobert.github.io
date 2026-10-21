@@ -12,7 +12,7 @@ Fair warning: I currently have two books open at once. This is either a sign of 
 - **AI Engineering** — Chip Huyen — Detailed and dense content for AI nerds.
 - **Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow** — Aurélien Géron — My attempt at understanding the basics of machine learning. Not embedded-specific — this is training models on a desktop, not squeezing inference onto a Cortex-M — but useful groundwork before I try to figure out what actually survives the trip onto an MCU.
 
-## Read
+## Recommended Reads
 
 - **Clean Architecture** — Robert C. Martin — Wanted to broaden my view beyond the embedded SW universe, and this book clearly delivers. It focuses on boundaries, dependencies, and principles in object-oriented design — turns out most "architecture decisions" still come down to "where do I put this one function."
 - **Making Embedded Systems** — Elecia White — Started once before and picking it back up.
