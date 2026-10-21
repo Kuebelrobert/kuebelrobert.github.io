@@ -4,7 +4,7 @@ description: >-
   communication, RTOS, AUTOSAR, firmware, debugging, AI, and engineering
   processes — drawn from professional work and self-study.
 author: Robert
-email: robert.koerner87@googlemail.com
+email: kuebelroberttech@googlemail.com
 baseurl: "" # subpath if this is a project site, e.g. "/blog" — leave empty for a <user>.github.io root site
 # Canonical domain. A Cloudflare Worker on this domain proxies GitHub Pages and
 # gates /premium/* (see the private repo). Also used for the unlock form action.
