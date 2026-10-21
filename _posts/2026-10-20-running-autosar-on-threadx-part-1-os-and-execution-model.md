@@ -255,4 +255,4 @@ So far, the components have a place to run and a reason to wake up. What they do
 - Olaf Kindel, Mario Friedrich: *Softwareentwicklung mit AUTOSAR*, dpunkt.verlag, 2009 (German) — a practical walkthrough of the AUTOSAR OS and RTE concepts.
 - Giorgio C. Buttazzo: *Hard Real-Time Computing Systems*, 3rd ed., Springer, 2011 — priority ceiling and priority inheritance, the theory behind resources and mutexes.
 
-*The animations in this post are rendered with [manim](https://www.manim.community/) from [`scripts/manim/autosar_threadx_scenes.py`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/scripts/manim/autosar_threadx_scenes.py).*
+*The animations in this post are rendered with [manim](https://www.manim.community/) from [`scripts/manim/autosar_threadx_scenes.py`](https://github.com/Kuebelrobert/kuebelrobert.github.io/blob/main/scripts/manim/autosar_threadx_scenes.py).*

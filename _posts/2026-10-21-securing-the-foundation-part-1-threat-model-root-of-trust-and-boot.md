@@ -30,7 +30,7 @@ A TARA works in five steps:
 
 The output is a set of **cybersecurity goals**, and from those you derive requirements. Without a TARA, every security discussion turns into "but what if the attacker…" and never ends, because an attacker with enough budget can always do one more thing. The TARA is how you decide where to stop. It turns paranoia into a documented, reviewable risk acceptance. Paranoia is cheap, the documented version costs effort.
 
-Here's a heavily trimmed first TARA for our BCU. As always in this series, the ratings are assumptions with a date on them, not results. If you want the untrimmed version — 14 assets, 13 damage scenarios, 19 threat scenarios with attack-potential ratings, risk treatment and eight cybersecurity goals with their CAL — it's in the repo as [`examples/TARA_BCU_example.xlsx`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/examples/TARA_BCU_example.xlsx). Same idea as the memory map: the source of truth is a YAML file, [`_data/tara_bcu.yml`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/_data/tara_bcu.yml), and [`scripts/build_tara.py`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/scripts/build_tara.py) refuses to generate the workbook if a risk above the acceptance threshold is left untreated.
+Here's a heavily trimmed first TARA for our BCU. As always in this series, the ratings are assumptions with a date on them, not results. If you want the untrimmed version — 14 assets, 13 damage scenarios, 19 threat scenarios with attack-potential ratings, risk treatment and eight cybersecurity goals with their CAL — it's in the repo as [`examples/TARA_BCU_example.xlsx`](https://github.com/Kuebelrobert/kuebelrobert.github.io/blob/main/examples/TARA_BCU_example.xlsx). Same idea as the memory map: the source of truth is a YAML file, [`_data/tara_bcu.yml`](https://github.com/Kuebelrobert/kuebelrobert.github.io/blob/main/_data/tara_bcu.yml), and [`scripts/build_tara.py`](https://github.com/Kuebelrobert/kuebelrobert.github.io/blob/main/scripts/build_tara.py) refuses to generate the workbook if a risk above the acceptance threshold is left untreated.
 
 | Asset | Property | Damage scenario | Impact | Main attack path | Feasibility |
 |---|---|---|---|---|---|
@@ -199,4 +199,4 @@ What we haven't covered yet is everything that tries to get *into* the ECU while
 - Adam Shostack: *Threat Modeling: Designing for Security*, Wiley, 2014
 - Ross Anderson: *Security Engineering*, 3rd ed., Wiley, 2020
 
-*The animations in this post are rendered with [manim](https://www.manim.community/) from [`scripts/manim/security_scenes.py`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/scripts/manim/security_scenes.py).*
+*The animations in this post are rendered with [manim](https://www.manim.community/) from [`scripts/manim/security_scenes.py`](https://github.com/Kuebelrobert/kuebelrobert.github.io/blob/main/scripts/manim/security_scenes.py).*
