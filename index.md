@@ -6,7 +6,7 @@ list_title: Latest chaos
 
 Embedded software architecture, told the way it actually happens: not "here's a clean pattern," but "here's the mess, here's why it happened, and here's what I'd do differently at 2am with a debugger attached."
 
-Expect posts on security, flashing and bootloaders, communication protocols, RTOS design, AUTOSAR, firmware architecture, debugging, where AI tooling genuinely helps (and where it just confidently makes things up), and the engineering processes that are supposed to stop all of the above from happening again.
+Expect posts on security, flashing and bootloaders, communication protocols, RTOS design, AUTOSAR, firmware architecture, debugging, where AI tooling genuinely helps (and where it just confidently makes things up), and the System & SW Architecture that are supposed to stop all of the above from happening again.
 
 A few things you can count on:
 

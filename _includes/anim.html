@@ -1,0 +1,22 @@
+{%- comment -%}
+  Embeds a looping, muted animation (MP4 rendered with manim, see scripts/manim/).
+  Premium articles use src="/premium/media/..." (videos live in the private repo).
+  Usage: {% include anim.html src="/assets/videos/x.mp4" alt="..." caption="..." %}
+  Respects prefers-reduced-motion: autoplay is switched off, controls stay available.
+{%- endcomment -%}
+<figure class="anim" style="margin:1.5rem 0">
+<video src="{{ include.src | relative_url }}" autoplay loop muted playsinline controls preload="metadata" aria-label="{{ include.alt }}" style="display:block;width:100%;height:auto;border-radius:6px;border:1px solid #e1e0dc"></video>
+<figcaption style="font-size:0.9rem;color:#52514e;margin-top:0.4rem">{{ include.caption }}</figcaption>
+</figure>
+{%- unless anim_motion_guard_loaded -%}
+{%- assign anim_motion_guard_loaded = true -%}
+<script>
+(function () {
+  if (!window.matchMedia || !matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  function stop() {
+    document.querySelectorAll("figure.anim video").forEach(function (v) { v.removeAttribute("autoplay"); v.pause(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", stop); else stop();
+})();
+</script>
+{%- endunless -%}

@@ -7,7 +7,7 @@ Hi to everybody who stumbled over my blog. Highly welcome — you've found the c
 
 I am an enthusiastic embedded SW architect writing about the problems I have faced during private and work-related projects, and the decisions that seemed reasonable at 5pm on a Friday.
 
-<img src="{{ '/assets/images/embedded-reality-check.svg' | relative_url }}" alt="Meme: Expectation - a clean rocket labeled Clean Architecture shipping on Friday afternoon. Reality - a tangled wire ball and a bug, captioned it works on my debugger and GC decided the flashing sequence needed company." style="max-width: 100%; margin: 1.5em 0;">
+<img src="{{ '/assets/images/architecture_meme.jpg' | relative_url }}" alt="I think the meme says enough :)" style="max-width: 100%; margin: 1.5em 0;">
 
 *(Sponsored by nobody. Accuracy independently verified by every project I have ever shipped.)*
 
@@ -31,6 +31,6 @@ Topics I try to cover here include:
 - **Firmware** — architecture patterns, portability, low-level design decisions
 - **Debugging** — JTAG/SWD workflows, tracking down hard-to-reproduce bugs
 - **AI** — where AI tooling actually helps in embedded/firmware engineering
-- **Engineering Processes** — code review, branching, release practices for firmware teams
+- **System & SW Architecture** — code review, branching, release practices for firmware teams
 
 I will update or post as soon as I have some free time.

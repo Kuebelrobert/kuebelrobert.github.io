@@ -1,0 +1,94 @@
+{%- comment -%}
+  Attack surface of the BCU: every way in from the outside, the core or stage that
+  receives it, and the number of the "door" (section of the security series) that
+  covers it. Reuses tokens from mpu-matrix-base.html.
+{%- endcomment -%}
+{% include mpu-matrix-base.html %}
+<figure class="viz-root mpu-matrix sec-surface" id="security-attack-surface">
+<style>
+.sec-surface svg { max-width: 760px; }
+.sec-surface .box { fill: var(--surface-1); stroke: var(--text-secondary); stroke-width: 1.2; }
+.sec-surface .box.ext { stroke-dasharray: 4 3; }
+.sec-surface .box.asil { stroke: var(--good); stroke-width: 2; }
+.sec-surface .ecu { fill: none; stroke: var(--text-secondary); stroke-width: 1.5; }
+.sec-surface .hsm { fill: url(#mpu-hatch); stroke: var(--critical); stroke-width: 1.5; }
+.sec-surface .hsm-in { fill: var(--surface-1); stroke: none; }
+.sec-surface .ttl { fill: var(--text-primary); font-size: 14px; font-weight: 600; }
+.sec-surface .sub { fill: var(--text-secondary); font-size: 11.5px; }
+.sec-surface .hdr { fill: var(--text-secondary); font-size: 12px; text-anchor: middle; }
+.sec-surface .p { fill: none; stroke: var(--critical); stroke-width: 2; }
+.sec-surface .p.ok { stroke: var(--good); }
+.sec-surface .p.int { stroke: var(--text-secondary); stroke-dasharray: 4 3; }
+.sec-surface .ah { fill: var(--critical); }
+.sec-surface .ah.ok { fill: var(--good); }
+.sec-surface .ah.int { fill: var(--text-secondary); }
+.sec-surface .badge { fill: var(--text-primary); }
+.sec-surface .badge-t { fill: var(--surface-1); font-size: 11px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+.sec-surface .lbl { fill: var(--text-secondary); font-size: 11px; }
+.sec-surface ul { margin: 0.5rem 0 0 1.25rem; font-size: 0.9rem; color: var(--text-secondary); }
+</style>
+<div class="mpu-legend" aria-hidden="true">
+<span class="mpu-key"><span class="mpu-swatch denied"></span>Untrusted input from outside the ECU</span>
+<span class="mpu-key"><span class="mpu-swatch granted"></span>Diverse safety path, no bus involved</span>
+<span class="mpu-key"><span class="mpu-swatch wrap">4</span> Door (section) that covers it</span>
+</div>
+<svg viewBox="0 0 760 440" role="img" aria-labelledby="sec-surface-title sec-surface-desc">
+<title id="sec-surface-title">Attack surface of the BCU</title>
+<desc id="sec-surface-desc">Six ways into the BCU from outside. The OBD port and the four CAN FD channels, and Ethernet with DoIP, both end at Core 1, which runs the gateway, SecOC and a rule-based IDS. The eight LIN channels, some running to doors and mirrors, end at Core 2. The key transponder ends at Core 5, which runs diagnostics, the immobilizer and the update manager. Update packages end at Stage-2. The debug port is controlled by the HSM and the lifecycle state. Core 1 passes ASIL-relevant signals to the ASIL B Core 0 through the mailbox with E2E protection. The hardwired brake switch reaches Core 0 directly, without any bus. The HSM holds all keys behind a firewall.</desc>
+<defs>
+<marker id="sec-ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0,0 L8,4 L0,8 z"/></marker>
+<marker id="sec-ah-ok" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah ok" d="M0,0 L8,4 L0,8 z"/></marker>
+<marker id="sec-ah-int" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah int" d="M0,0 L8,4 L0,8 z"/></marker>
+</defs>
+<text class="hdr" x="100" y="22">Outside world</text>
+<text class="hdr" x="475" y="22">BCU</text>
+<rect class="ecu" x="250" y="30" width="450" height="400" rx="10"/>
+<!-- entry points -->
+<rect class="box ext" x="10" y="40" width="180" height="46" rx="6"/><text class="ttl" x="22" y="60">OBD port · CAN FD ×4</text><text class="sub" x="22" y="77">anyone with a €20 adapter</text>
+<rect class="box ext" x="10" y="100" width="180" height="46" rx="6"/><text class="ttl" x="22" y="120">Ethernet · DoIP</text><text class="sub" x="22" y="137">telematics, diagnostics</text>
+<rect class="box ext" x="10" y="160" width="180" height="46" rx="6"/><text class="ttl" x="22" y="180">LIN ×8</text><text class="sub" x="22" y="197">doors, mirrors: outside the car</text>
+<rect class="box ext" x="10" y="220" width="180" height="46" rx="6"/><text class="ttl" x="22" y="240">Key / transponder</text><text class="sub" x="22" y="257">RF, relay attacks</text>
+<rect class="box ext" x="10" y="280" width="180" height="46" rx="6"/><text class="ttl" x="22" y="300">Update package</text><text class="sub" x="22" y="317">OTA or workshop tester</text>
+<rect class="box ext" x="10" y="350" width="180" height="46" rx="6"/><text class="ttl" x="22" y="370">Debug port</text><text class="sub" x="22" y="387">JTAG/SWD, physical access</text>
+<!-- receivers -->
+<rect class="box" x="290" y="45" width="170" height="70" rx="6"/><text class="ttl" x="302" y="68">Core 1 · QM</text><text class="sub" x="302" y="86">gateway · SecOC</text><text class="sub" x="302" y="102">rule-based IDS</text>
+<rect class="box" x="290" y="155" width="170" height="56" rx="6"/><text class="ttl" x="302" y="178">Core 2 · QM</text><text class="sub" x="302" y="196">LIN master · body</text>
+<rect class="box" x="290" y="220" width="170" height="56" rx="6"/><text class="ttl" x="302" y="243">Core 5 · QM</text><text class="sub" x="302" y="261">diag · immo · update</text>
+<rect class="box" x="290" y="285" width="170" height="50" rx="6"/><text class="ttl" x="302" y="306">Stage-1 / Stage-2</text><text class="sub" x="302" y="323">boot · flashing</text>
+<rect class="box asil" x="500" y="45" width="170" height="100" rx="6"/><text class="ttl" x="512" y="68">Core 0 · ASIL B</text><text class="sub" x="512" y="86">exterior lights</text><text class="sub" x="512" y="102">E2E check</text><text class="sub" x="512" y="118">no direct outside input</text>
+<rect class="hsm" x="500" y="200" width="170" height="215" rx="6"/>
+<rect class="hsm-in" x="508" y="208" width="154" height="199" rx="4"/>
+<text class="ttl" x="518" y="232">HSM</text><text class="sub" x="518" y="252">all keys, behind a firewall</text><text class="sub" x="518" y="270">crypto jobs, TRNG</text><text class="sub" x="518" y="288">monotonic counters</text><text class="sub" x="518" y="306">boot verification</text><text class="sub" x="518" y="324">lifecycle · debug unlock</text>
+<!-- external paths -->
+<path class="p" d="M190,63 H287" marker-end="url(#sec-ah)"/>
+<path class="p" d="M190,123 H240 V100 H287" marker-end="url(#sec-ah)"/>
+<path class="p" d="M190,183 H287" marker-end="url(#sec-ah)"/>
+<path class="p" d="M190,243 H287" marker-end="url(#sec-ah)"/>
+<path class="p" d="M190,303 H287" marker-end="url(#sec-ah)"/>
+<path class="p" d="M190,373 H497" marker-end="url(#sec-ah)"/>
+<!-- internal paths -->
+<path class="p int" d="M460,80 H497" marker-end="url(#sec-ah-int)"/>
+<text class="lbl" x="463" y="74">mailbox</text>
+<path class="p int" d="M460,248 H497" marker-end="url(#sec-ah-int)"/>
+<path class="p int" d="M460,310 H497" marker-end="url(#sec-ah-int)"/>
+<path class="p ok" d="M755,95 H673" marker-end="url(#sec-ah-ok)"/>
+<text class="lbl" x="706" y="86">brake</text><text class="lbl" x="706" y="112">switch</text>
+<!-- door badges -->
+<rect class="badge" x="203" y="54" width="30" height="18" rx="9"/><text class="badge-t" x="218" y="63">4·5</text>
+<rect class="badge" x="198" y="114" width="30" height="18" rx="9"/><text class="badge-t" x="213" y="123">4·6</text>
+<circle class="badge" cx="218" cy="183" r="9"/><text class="badge-t" x="218" y="183">4</text>
+<circle class="badge" cx="218" cy="243" r="9"/><text class="badge-t" x="218" y="243">8</text>
+<circle class="badge" cx="218" cy="303" r="9"/><text class="badge-t" x="218" y="303">3</text>
+<circle class="badge" cx="218" cy="373" r="9"/><text class="badge-t" x="218" y="373">7</text>
+<rect class="badge" x="625" y="215" width="30" height="18" rx="9"/><text class="badge-t" x="640" y="224">1·2</text>
+<circle class="badge" cx="445" cy="62" r="9"/><text class="badge-t" x="445" y="62">9</text>
+</svg>
+<figcaption>
+Every way into the BCU, and where it lands. The badges are the doors of this series: 1–2 in Part 1, 3–5 in Part 2, 6–10 in Part 3.
+<ul>
+<li>All external input lands on a QM core or on the bootloader, never directly on the ASIL B core. ASIL-relevant data reaches Core 0 only through the mailbox, and Core 0 checks it with E2E.</li>
+<li>The brake light has a second path that no bus can reach: the hardwired brake switch.</li>
+<li>Every key is in the HSM. The cores send jobs to it (dashed lines) and only get results back.</li>
+</ul>
+</figcaption>
+</figure>

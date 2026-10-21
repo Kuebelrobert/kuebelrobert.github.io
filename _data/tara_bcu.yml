@@ -1,0 +1,400 @@
+# Example TARA (ISO/SAE 21434 threat analysis and risk assessment) for the BCU of the
+# "Create the Foundation" and "Securing the Foundation" series.
+#
+# All ratings are illustrative teaching values, not a real TARA. The structure follows
+# ISO/SAE 21434 clause 15 (assets -> damage scenarios -> threat scenarios -> attack
+# feasibility -> risk -> treatment -> cybersecurity goals). Anonymized like every other
+# example on the blog: generic MCU, generic vehicle, no supplier names.
+#
+# This file is the source of truth. scripts/build_tara.py checks it and generates
+# examples/TARA_BCU_example.xlsx from it (with live formulas for feasibility, risk and CAL).
+#
+# Closed vocabularies (the script rejects anything else):
+#   property:      C (confidentiality) | I (integrity) | A (availability)
+#   impact:        negligible | moderate | major | severe   (per category S/F/O/P)
+#   stride:        spoofing | tampering | repudiation | information_disclosure |
+#                  denial_of_service | elevation_of_privilege
+#   vector:        network | adjacent | local | physical
+#   elapsed_time:  "<=1d" | "<=1w" | "<=1m" | "<=6m" | ">6m"
+#   expertise:     layman | proficient | expert | multiple_experts
+#   knowledge:     public | restricted | confidential | strictly_confidential
+#   window:        unlimited | easy | moderate | difficult
+#   equipment:     standard | specialized | bespoke | multiple_bespoke
+#   treatment:     reduce | retain | share | avoid
+#
+# Rules the script enforces:
+#   - every reference (asset, damage scenario, goal) resolves
+#   - initial risk >= 3 must not be "retain"
+#   - every "reduce" threat names controls, a goal and a residual rating
+#   - residual risk after "reduce" is <= 2 (the acceptance threshold of this example)
+#   - every goal is referenced by at least one threat
+
+document:
+  title: "TARA — Illustrative Example: Body Control Unit (BCU)"
+  item: "BCU on a six-core Cortex-M7 MCU with HSM: 1 simplex ASIL B core (exterior lights), 5 QM cores (communication, LIN/body, comfort, parking, services)"
+  status: "Illustrative teaching example. Not a real TARA, not reusable as evidence for ISO/SAE 21434 or UN R155."
+  risk_acceptance: "Residual risk <= 2 is accepted. Risk >= 3 must be reduced, shared or avoided."
+  related_posts:
+    - "_posts/2026-10-21-securing-the-foundation-part-1-threat-model-root-of-trust-and-boot.md"
+    - "_posts/2026-10-21-securing-the-foundation-part-2-updates-bus-and-diagnostics.md"
+    - "_posts/2026-10-21-securing-the-foundation-part-3-code-debug-immobilizer-and-detection.md"
+
+assets:
+  - id: A01
+    name: "Lock/unlock command (central locking)"
+    location: "Core 2 (body), requested via CAN FD (Core 1) and keyless entry (Core 5)"
+    properties: [I]
+  - id: A02
+    name: "Immobilizer secret key"
+    location: "HSM Data Flash"
+    properties: [C]
+  - id: A03
+    name: "Immobilizer authorization (BCU <-> engine ECU)"
+    location: "Core 5 + HSM"
+    properties: [I]
+  - id: A04
+    name: "Exterior light request (brake, hazard, low beam)"
+    location: "CAN FD -> Core 1 (SecOC) -> mailbox -> Core 0 (ASIL B)"
+    properties: [I, A]
+  - id: A05
+    name: "Application firmware (ASIL B and QM images)"
+    location: "Program Flash, application regions"
+    properties: [I]
+  - id: A06
+    name: "Flash bootloader / update process"
+    location: "Stage-2, update manager on Core 5"
+    properties: [I, A]
+  - id: A07
+    name: "SecOC keys"
+    location: "HSM Data Flash"
+    properties: [C]
+  - id: A08
+    name: "Diagnostic services (IO control 0x2F, WriteDataByIdentifier, routines)"
+    location: "Core 5 (UDS), Core 0 decides on IO control of lamp outputs"
+    properties: [I]
+  - id: A09
+    name: "Variant coding and configuration"
+    location: "QM NVM"
+    properties: [I]
+  - id: A10
+    name: "Debug interface (JTAG/SWD)"
+    location: "Chip, lifecycle state in chip OTP"
+    properties: [C, I]
+  - id: A11
+    name: "Security event memory"
+    location: "QM NVM, separate ring buffer, HSM-MACed"
+    properties: [I]
+  - id: A12
+    name: "Personal usage data (lock/unlock history, key usage)"
+    location: "QM NVM, DTC snapshots"
+    properties: [C]
+  - id: A13
+    name: "Gateway and body function availability"
+    location: "Core 1 (gateway), Core 2 (body)"
+    properties: [A]
+  - id: A14
+    name: "Data flash erase budget"
+    location: "Data Flash, QM NVM block"
+    properties: [A]
+
+damage_scenarios:
+  - id: DS01
+    asset: A01
+    property: I
+    text: "Vehicle unlocked without an authorized key and stolen"
+    impact: {safety: negligible, financial: severe, operational: moderate, privacy: negligible}
+  - id: DS02
+    asset: A02
+    property: C
+    text: "Vehicle started without an authorized key (cloned key or forged authorization)"
+    impact: {safety: negligible, financial: severe, operational: moderate, privacy: negligible}
+  - id: DS03
+    asset: A04
+    property: I
+    text: "Phantom brake or hazard lights confuse following traffic"
+    impact: {safety: moderate, financial: negligible, operational: moderate, privacy: negligible}
+  - id: DS04
+    asset: A04
+    property: A
+    text: "Brake light does not come on while the driver brakes"
+    impact: {safety: major, financial: negligible, operational: moderate, privacy: negligible}
+  - id: DS05
+    asset: A05
+    property: I
+    text: "Persistent malicious code runs in the BCU, potentially fleet-wide"
+    impact: {safety: major, financial: severe, operational: severe, privacy: moderate}
+  - id: DS06
+    asset: A06
+    property: A
+    text: "ECU left without a valid application (bricked) after a manipulated update attempt"
+    impact: {safety: negligible, financial: moderate, operational: major, privacy: negligible}
+  - id: DS07
+    asset: A07
+    property: C
+    text: "Attacker can authenticate as any ECU on the body bus in every vehicle sharing the key"
+    impact: {safety: major, financial: severe, operational: major, privacy: negligible}
+  - id: DS08
+    asset: A08
+    property: I
+    text: "Lamp outputs or body actuators controlled via diagnostics while driving"
+    impact: {safety: major, financial: negligible, operational: moderate, privacy: negligible}
+  - id: DS09
+    asset: A09
+    property: I
+    text: "Paid features unlocked or vehicle configuration manipulated"
+    impact: {safety: negligible, financial: moderate, operational: moderate, privacy: negligible}
+  - id: DS10
+    asset: A11
+    property: I
+    text: "Traces of an attack deleted, fleet-wide campaign goes unnoticed"
+    impact: {safety: negligible, financial: moderate, operational: moderate, privacy: negligible}
+  - id: DS11
+    asset: A12
+    property: C
+    text: "Movement and usage profile of the driver disclosed"
+    impact: {safety: negligible, financial: negligible, operational: negligible, privacy: moderate}
+  - id: DS12
+    asset: A13
+    property: A
+    text: "Body functions (lights, doors, wipers) unavailable"
+    impact: {safety: major, financial: negligible, operational: major, privacy: negligible}
+  - id: DS13
+    asset: A14
+    property: A
+    text: "Data flash worn out: DTCs, adaptation values and configuration lost"
+    impact: {safety: negligible, financial: moderate, operational: major, privacy: negligible}
+
+threat_scenarios:
+  - id: TS01
+    damage: [DS01]
+    stride: spoofing
+    vector: physical
+    text: "Unlock frames injected into body CAN wiring reachable from outside (headlight harness)"
+    attack_path: "Open headlight connector -> attach CAN injector -> send 'unlock'"
+    initial: {elapsed_time: "<=1d", expertise: layman, knowledge: public, window: easy, equipment: specialized}
+    treatment: reduce
+    controls: "SecOC on lock/unlock PDUs, per-vehicle keys in the HSM (Part 2, door 4)"
+    goal: CSG01
+    residual: {elapsed_time: "<=6m", expertise: expert, knowledge: restricted, window: moderate, equipment: bespoke}
+  - id: TS02
+    damage: [DS01]
+    stride: spoofing
+    vector: physical
+    text: "Unlock requested via an exposed door/mirror LIN bus"
+    attack_path: "Remove mirror cover -> LIN master emulator -> send door handle 'unlock request'"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: restricted, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "LIN slaves never decide security: unlock only after keyless/immobilizer protocol in the BCU; plausibility and rate limit; exterior LIN on its own channel (Part 2, door 4)"
+    goal: CSG01
+    residual: {elapsed_time: "<=1m", expertise: expert, knowledge: confidential, window: moderate, equipment: specialized}
+  - id: TS03
+    damage: [DS02]
+    stride: spoofing
+    vector: physical
+    text: "Recorded immobilizer authorization replayed to the engine ECU"
+    attack_path: "Tap BCU <-> engine ECU wiring -> record 'immo OK' -> replay without key"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: restricted, window: easy, equipment: specialized}
+    treatment: reduce
+    controls: "Challenge-response with TRNG nonce, CMAC from the HSM (Part 3, door 8)"
+    goal: CSG01
+    residual: {elapsed_time: ">6m", expertise: expert, knowledge: confidential, window: easy, equipment: bespoke}
+  - id: TS04
+    damage: [DS02]
+    stride: information_disclosure
+    vector: physical
+    text: "Immobilizer key extracted from a scrapyard BCU by side-channel analysis or fault injection"
+    attack_path: "Buy BCU -> power analysis on AES / glitch the key read-out -> clone key"
+    initial: {elapsed_time: "<=1m", expertise: expert, knowledge: restricted, window: unlimited, equipment: specialized}
+    treatment: reduce
+    controls: "Hardened AES in the HSM, glitch detectors, per-vehicle key (no fleet value), redundant checks (Part 1, door 2; Part 3, door 8)"
+    goal: CSG02
+    residual: {elapsed_time: "<=6m", expertise: multiple_experts, knowledge: restricted, window: unlimited, equipment: bespoke}
+  - id: TS05
+    damage: [DS03]
+    stride: spoofing
+    vector: local
+    text: "Brake/hazard light request spoofed on CAN FD"
+    attack_path: "OBD port -> USB-CAN adapter -> send light request ID"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: restricted, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "SecOC with 64-bit MAC and freshness on light requests (Part 2, door 4)"
+    goal: CSG04
+    residual: {elapsed_time: "<=6m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+  - id: TS06
+    damage: [DS04]
+    stride: denial_of_service
+    vector: local
+    text: "CAN FD flooded or light requests suppressed while the driver brakes"
+    attack_path: "OBD port -> high-priority flood / bus-off attack on the light request"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Hardwired brake switch ORed on the ASIL B core, E2E timeout -> follow switch (Part 2, door 4)"
+    goal: CSG04
+    residual: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    residual_impact: negligible
+    residual_note: "Feasibility unchanged, but the damage is no longer reachable: the lamp follows the hardwired switch."
+  - id: TS07
+    damage: [DS05]
+    stride: tampering
+    vector: network
+    text: "Manipulated application image installed via OTA or workshop update"
+    attack_path: "Craft image -> programming session -> download (CRC-only check accepts it)"
+    initial: {elapsed_time: "<=1m", expertise: proficient, knowledge: restricted, window: easy, equipment: specialized}
+    treatment: reduce
+    controls: "Signed manifest verified before erase, per-block hashes, authenticated boot with keys bound to the result (Part 1, door 2; Part 2, door 3)"
+    goal: CSG03
+    residual: {elapsed_time: ">6m", expertise: multiple_experts, knowledge: strictly_confidential, window: difficult, equipment: multiple_bespoke}
+  - id: TS08
+    damage: [DS05]
+    stride: tampering
+    vector: network
+    text: "Rollback to an older, correctly signed version with a known vulnerability"
+    attack_path: "Obtain old signed release -> programming session -> flash it -> use the old exploit"
+    initial: {elapsed_time: "<=1w", expertise: proficient, knowledge: restricted, window: moderate, equipment: specialized}
+    treatment: reduce
+    controls: "Security version + HSM monotonic counter, checked by Stage-2 (Part 2, door 3)"
+    goal: CSG03
+    residual: {elapsed_time: ">6m", expertise: expert, knowledge: confidential, window: moderate, equipment: bespoke}
+  - id: TS09
+    damage: [DS06]
+    stride: denial_of_service
+    vector: local
+    text: "Invalid package sent to erase the application (erase before verify)"
+    attack_path: "Programming session -> send random package -> application erased -> verification fails"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Manifest signature checked before the first erase; programming session needs UDS 0x29 and a parked vehicle (Part 2, doors 3 and 5)"
+    goal: CSG06
+    residual: {elapsed_time: "<=1d", expertise: expert, knowledge: confidential, window: moderate, equipment: bespoke}
+  - id: TS10
+    damage: [DS07]
+    stride: information_disclosure
+    vector: physical
+    text: "Shared SecOC key read out of one ECU and reused in the fleet"
+    attack_path: "Debugger / flash dump of one BCU -> key found in application data flash"
+    initial: {elapsed_time: "<=1m", expertise: proficient, knowledge: restricted, window: unlimited, equipment: specialized}
+    treatment: reduce
+    controls: "Keys only in the firewalled HSM, per-vehicle/cluster keys, debug lock (Part 1, door 1; Part 3, door 7)"
+    goal: CSG02
+    residual: {elapsed_time: ">6m", expertise: multiple_experts, knowledge: confidential, window: unlimited, equipment: multiple_bespoke}
+  - id: TS11
+    damage: [DS08]
+    stride: elevation_of_privilege
+    vector: local
+    text: "UDS SecurityAccess (0x27) broken by reverse engineering or brute force"
+    attack_path: "Reverse tester DLL / brute force seed-key -> IO control 0x2F on lamp outputs"
+    initial: {elapsed_time: "<=1w", expertise: proficient, knowledge: restricted, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "UDS 0x29 with role certificates, attempt counter in NVM, 0x2F accepted by Core 0 only at standstill (Part 2, door 5)"
+    goal: CSG05
+    residual: {elapsed_time: "<=6m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+  - id: TS12
+    damage: [DS09]
+    stride: tampering
+    vector: local
+    text: "Variant coding manipulated to unlock paid features"
+    attack_path: "Weak SecurityAccess -> WriteDataByIdentifier on coding DIDs"
+    initial: {elapsed_time: "<=1w", expertise: proficient, knowledge: restricted, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Coding DIDs need the workshop role from a 0x29 certificate (Part 2, door 5)"
+    goal: CSG05
+    residual: {elapsed_time: "<=1m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+  - id: TS13
+    damage: [DS07, DS05]
+    stride: elevation_of_privilege
+    vector: physical
+    text: "Unlocked debug port used to read keys or write flash (skipped EOL lock, field return)"
+    attack_path: "Open housing -> JTAG/SWD -> dump HSM-external memory or reflash"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: moderate, equipment: standard}
+    treatment: reduce
+    controls: "EOL lock enforced by the end-of-line test, per-ECU challenge-response unlock, keys erased before failure analysis (Part 3, door 7)"
+    goal: CSG02
+    residual: {elapsed_time: ">6m", expertise: expert, knowledge: strictly_confidential, window: moderate, equipment: bespoke}
+  - id: TS14
+    damage: [DS10]
+    stride: repudiation
+    vector: local
+    text: "Security events deleted with ClearDiagnosticInformation"
+    attack_path: "Generic diagnostic tool -> clear DTCs -> security events gone"
+    initial: {elapsed_time: "<=1d", expertise: layman, knowledge: public, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Separate event ring buffer, HSM CMAC per entry, clearing only with an authenticated role (Part 3, door 9)"
+    goal: CSG07
+    residual: {elapsed_time: "<=1m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+  - id: TS15
+    damage: [DS11]
+    stride: information_disclosure
+    vector: local
+    text: "Lock/unlock history read out via diagnostics"
+    attack_path: "Generic diagnostic tool -> ReadDataByIdentifier on history DIDs"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Data minimization (no timestamps unless needed), history readable only with an authenticated role (Part 3, door 10)"
+    goal: CSG05
+    residual: {elapsed_time: "<=1m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+  - id: TS16
+    damage: [DS12]
+    stride: denial_of_service
+    vector: network
+    text: "Compromised ECU floods CAN FD and exhausts Core 1's interrupt budget"
+    attack_path: "Remote exploit of another ECU -> high-rate flood on the shared CAN FD channel"
+    initial: {elapsed_time: "<=1m", expertise: expert, knowledge: restricted, window: easy, equipment: specialized}
+    treatment: reduce
+    controls: "Hardware acceptance filters, per-source rate limits in the gateway, ASIL B lighting path independent of Core 1 (Part 2, door 4)"
+    goal: CSG08
+    residual: {elapsed_time: "<=1m", expertise: expert, knowledge: restricted, window: easy, equipment: specialized}
+    residual_impact: moderate
+    residual_note: "Flood still possible, but lights stay on the ASIL B path and only comfort routing degrades."
+  - id: TS17
+    damage: [DS13]
+    stride: denial_of_service
+    vector: local
+    text: "Security events triggered at high rate to wear out the data flash"
+    attack_path: "OBD port -> invalid SecOC frames at 1000/s -> one NVM write per event"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    treatment: reduce
+    controls: "Count in RAM, aggregate, write at a fixed rate (Part 3, door 9)"
+    goal: CSG07
+    residual: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: easy, equipment: standard}
+    residual_impact: negligible
+    residual_note: "The attack still triggers events, but costs a bounded number of NVM writes."
+  - id: TS18
+    damage: [DS01]
+    stride: spoofing
+    vector: adjacent
+    text: "Relay attack extends the range between the owner's key and the vehicle"
+    attack_path: "Relay device near the key in the house + relay device at the car -> keyless unlock"
+    initial: {elapsed_time: "<=1d", expertise: proficient, knowledge: public, window: moderate, equipment: specialized}
+    treatment: reduce
+    controls: "UWB distance bounding at vehicle level; the BCU only unlocks with a valid ranging result (Part 3, door 8)"
+    goal: CSG01
+    residual: {elapsed_time: "<=6m", expertise: expert, knowledge: confidential, window: moderate, equipment: bespoke}
+  - id: TS19
+    damage: [DS05]
+    stride: elevation_of_privilege
+    vector: network
+    text: "Buffer overflow in the UDS/DoIP parser exploited to run code"
+    attack_path: "DoIP request with a manipulated length -> overflow in WriteDataByIdentifier -> code execution"
+    initial: {elapsed_time: "<=1m", expertise: expert, knowledge: restricted, window: easy, equipment: specialized}
+    treatment: reduce
+    controls: "Length and range checks, fuzzing in CI, parsers unprivileged, MPU W^X and stack guards (Part 3, door 6)"
+    goal: CSG03
+    residual: {elapsed_time: "<=6m", expertise: expert, knowledge: confidential, window: easy, equipment: specialized}
+
+goals:
+  - id: CSG01
+    text: "Lock/unlock and engine start shall only be authorized by a genuine key in range."
+  - id: CSG02
+    text: "Cryptographic keys shall be protected against disclosure, and a key extracted from one ECU shall not compromise other vehicles."
+  - id: CSG03
+    text: "Only authentic software at or above the current security version shall run with access to keys."
+  - id: CSG04
+    text: "Exterior light requests shall be authentic, and an attack on the bus shall not prevent the brake light from working."
+  - id: CSG05
+    text: "Diagnostic services and stored personal data shall only be available to authorized roles in permitted vehicle states."
+  - id: CSG06
+    text: "An update attempt shall never leave the ECU without a valid, flashable software state."
+  - id: CSG07
+    text: "Security events shall be stored tamper-evident without exhausting the data flash."
+  - id: CSG08
+    text: "Safety-relevant body functions shall remain available while the bus is flooded."

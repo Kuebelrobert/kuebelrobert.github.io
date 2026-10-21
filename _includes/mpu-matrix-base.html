@@ -1,0 +1,101 @@
+{%- comment -%}
+  Shared styles, hatch pattern and tooltip for the MPU permission matrices
+  (mpu-code-access.html, mpu-data-access.html). Emitted once per page.
+{%- endcomment -%}
+{%- unless mpu_matrix_base_loaded -%}
+{%- assign mpu_matrix_base_loaded = true -%}
+<style>
+.mpu-matrix {
+  --surface-1: #fdfdfd;
+  --text-primary: #111111;
+  --text-secondary: #52514e;
+  --good: #0ca30c;
+  --on-good: #ffffff;
+  --caution: #f2a900;
+  --on-caution: #1a1a19;
+  --critical: #d03b3b;
+  --critical-tint: #fbeaea;
+  --wrap: #2a78d6;
+  --on-wrap: #ffffff;
+  margin: 1.5rem 0;
+  position: relative;
+  color: var(--text-primary);
+  background: var(--surface-1);
+}
+:root[data-theme="dark"] .mpu-matrix {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --critical-tint: #3a2020;
+  --wrap: #3987e5;
+}
+.mpu-matrix .mpu-legend { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+.mpu-matrix .mpu-key { display: inline-flex; align-items: center; gap: 0.4rem; }
+.mpu-matrix .mpu-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.mpu-matrix .mpu-swatch.granted { background: var(--good); }
+.mpu-matrix .mpu-swatch.caution { background: var(--caution); }
+.mpu-matrix .mpu-swatch.wrap { width: auto; height: auto; padding: 0 0.45rem; border-radius: 999px; background: var(--wrap); color: var(--on-wrap); font-size: 0.75rem; font-weight: 700; line-height: 1.4; }
+.mpu-matrix .mpu-swatch.denied { background: repeating-linear-gradient(45deg, var(--critical) 0 2px, var(--critical-tint) 2px 5px); box-shadow: inset 0 0 0 1.5px var(--critical); }
+.mpu-matrix svg { display: block; width: 100%; max-width: 560px; height: auto; font-family: inherit; }
+.mpu-matrix .axis-title { fill: var(--text-secondary); font-size: 13px; }
+.mpu-matrix .tick { fill: var(--text-primary); font-size: 15px; font-weight: 600; }
+.mpu-matrix .cell { cursor: default; outline: none; }
+.mpu-matrix .cell .bg.granted { fill: var(--good); }
+.mpu-matrix .cell .bg.caution { fill: var(--caution); }
+.mpu-matrix .cell .bg.denied { fill: url(#mpu-hatch); stroke: var(--critical); stroke-width: 1.5; }
+.mpu-matrix .cell .icon { font-size: 28px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.mpu-matrix .cell .half { font-size: 15px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.mpu-matrix .cell .granted:is(.icon, .half) { fill: var(--on-good); }
+.mpu-matrix .cell .caution:is(.icon, .half) { fill: var(--on-caution); }
+.mpu-matrix .cell .denied:is(.icon, .half) { fill: var(--critical); }
+.mpu-matrix .cell .pill { fill: var(--wrap); }
+.mpu-matrix .cell .pill-text { fill: var(--on-wrap); font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.mpu-matrix .cell .frame { fill: none; stroke: var(--text-secondary); stroke-width: 1.5; opacity: 0.55; }
+.mpu-matrix .cell .ring { fill: none; stroke: var(--text-primary); stroke-width: 2; opacity: 0; }
+.mpu-matrix .cell:hover .ring, .mpu-matrix .cell:focus .ring { opacity: 1; }
+.mpu-hatch-defs .hatch-bg { fill: var(--critical-tint, #fbeaea); }
+.mpu-hatch-defs .hatch-line { stroke: var(--critical, #d03b3b); stroke-width: 1.5; opacity: 0.45; }
+.mpu-matrix .mpu-tip { position: absolute; pointer-events: none; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; line-height: 1.3; max-width: 260px; background: var(--text-primary); color: var(--surface-1); box-shadow: 0 2px 8px rgba(0,0,0,0.2); opacity: 0; transition: opacity 80ms; }
+.mpu-matrix .mpu-tip.show { opacity: 1; }
+.mpu-matrix figcaption { font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.mpu-matrix details { margin-top: 0.5rem; font-size: 0.9rem; }
+.mpu-matrix table { margin-top: 0.5rem; }
+.mpu-matrix th, .mpu-matrix td { text-align: center; padding: 0.25rem 0.6rem; }
+</style>
+<svg class="mpu-hatch-defs mpu-matrix" width="0" height="0" style="position:absolute;margin:0" aria-hidden="true" focusable="false">
+<defs>
+<pattern id="mpu-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<rect class="hatch-bg" width="6" height="6"/>
+<line class="hatch-line" x1="0" y1="0" x2="0" y2="6"/>
+</pattern>
+</defs>
+</svg>
+<script>
+(function () {
+  function cellOf(e) { return e.target.closest && e.target.closest(".mpu-matrix .cell"); }
+  function show(cell) {
+    var fig = cell.closest(".mpu-matrix"), tip = fig.querySelector(".mpu-tip");
+    tip.innerHTML = cell.getAttribute("data-tip");
+    var f = fig.getBoundingClientRect(), b = cell.getBoundingClientRect();
+    tip.classList.add("show");
+    var left = b.left - f.left + b.width / 2 - tip.offsetWidth / 2;
+    left = Math.max(0, Math.min(left, fig.clientWidth - tip.offsetWidth));
+    var top = b.top - f.top - tip.offsetHeight - 6;
+    if (top < 0) top = b.bottom - f.top + 6;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  }
+  function hide(cell) { cell.closest(".mpu-matrix").querySelector(".mpu-tip").classList.remove("show"); }
+  ["mouseover", "focusin"].forEach(function (t) {
+    document.addEventListener(t, function (e) { var c = cellOf(e); if (c) show(c); });
+  });
+  ["mouseout", "focusout"].forEach(function (t) {
+    document.addEventListener(t, function (e) {
+      var c = cellOf(e);
+      if (c && !(e.relatedTarget && c.contains(e.relatedTarget))) hide(c);
+    });
+  });
+})();
+</script>
+{%- endunless -%}

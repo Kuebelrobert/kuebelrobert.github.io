@@ -91,6 +91,11 @@ A pattern that works better in practice is to give GC a *budget* instead of a bl
 
 Whatever strategy you pick, don't rely on the happy path holding up in the field. Always keep timeouts and fail-safe mechanisms in place, so that even if GC is allowed to run during flashing and the flashing itself fails, you can still fall back to a safe, previously validated backup image.
 
+## The decision, written down properly
+
+Everything above is the reasoning. If you'd rather hand the actual decision to a coding agent instead of re-deriving it from paragraphs — or just want something you can skim in thirty seconds instead of read — I've written it up as a compact Architecture Decision Record: [`ADR-0001: Budget garbage collection during flash sequences`](https://github.com/Kuebelrobert/sw_arch_blog/blob/main/_adr/0001-gc-budget-during-flash-sequences.md). It also answers a question that comes up the moment you're building this inside a platform instead of a single product: does GC budgeting even belong at the platform level, or is it product-specific plumbing? (Short version: platform — every derivative on the same NVM/FEE stack hits the identical problem, and nothing about the fix is product business logic.) The ADR stays short on purpose — a decision flowchart plus one fenced, structured block (interface, tunables, acceptance criteria) that an AI coding agent can work from directly, instead of paragraphs it would have to reverse-engineer first. Notice what it still doesn't do: hand you a specific threshold percentage or budget-in-milliseconds as if I'd already decided it for you. Those stay `calibration_required: true` — they depend on your sector size, your GC cost, and your actual target.
+
+
 ## Weak spots to check in your own architecture
 
 If you're starting a project, these are the questions worth answering before GC and flashing collide on you for real, and not on a whiteboard:
@@ -104,7 +109,14 @@ If you're starting a project, these are the questions worth answering before GC 
 There are many more things to consider, but I hope this gives you some awareness of the dangers — and the potential — of designing your system around the health of your data flash, so you can be bulletproof the day GC decides it wants to compete with your delivery date.
 
 
-## Further reading
+## Sources and further reading
+
+### Specifications
+
+- [AUTOSAR Classic Platform: Specification of Flash EEPROM Emulation (Fee), R23-11](https://www.autosar.org/fileadmin/standards/R23-11/CP/AUTOSAR_CP_SWS_FlashEEPROMEmulation.pdf) — the module that owns garbage collection in an AUTOSAR stack, and where the "when is GC allowed to run" question officially lives.
+- [AUTOSAR Classic Platform: Specification of NVRAM Manager (NvM), R23-11](https://www.autosar.org/fileadmin/standards/R23-11/CP/AUTOSAR_CP_SWS_NVRAMManager.pdf) — the layer above Fee: block management, write-all on shutdown, and why your shutdown time suddenly depends on flash.
+
+### Articles and papers
 
 A few sources on flash garbage collection, wear leveling, and AUTOSAR's NVM stack that go deeper into the mechanics touched on above:
 
@@ -115,3 +127,11 @@ A few sources on flash garbage collection, wear leveling, and AUTOSAR's NVM stac
 - [AURIX MCU: Garbage collection in FEE MCAL driver — Infineon Developer Community](https://community.infineon.com/t5/Knowledge-Base-Articles/AURIX-MCU-Garbage-collection-in-FEE-MCAL-driver/ta-p/371131)
 - [What is Wear Leveling and Garbage Collection in SSDs? — FutureScope](https://www.futurescope.co/wear-leveling-and-garbage-collection-in-ssd/)
 - [Garbage collection and wear leveling for flash memory: Past and future — IEEE Xplore](https://ieeexplore.ieee.org/document/7043841/)
+- Eran Gal, Sivan Toledo: [*Algorithms and Data Structures for Flash Memories*](https://doi.org/10.1145/1089733.1089735), ACM Computing Surveys 37(2), 2005 — the classic survey on log-structured flash storage, wear leveling and reclamation.
+- Michael Nygard: [*Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), 2011 — the blog post that started the ADR format used for ADR-0001 above. More templates at [adr.github.io](https://adr.github.io/).
+
+### Books
+
+- Rino Micheloni, Luca Crippa, Alessia Marelli: *Inside NAND Flash Memories*, Springer, 2010 — NAND rather than NOR, but the best explanation of why cells wear out, what retention really means and why erase is so expensive.
+- Elecia White: *Making Embedded Systems*, 2nd ed., O'Reilly, 2024 — has a solid chapter on memory and on designing for updates in the field.
+- Jörg Schäuffele, Thomas Zurawka: *Automotive Software Engineering*, 2nd ed., Springer Vieweg, 2016 — the big picture of where flashing, production and the vehicle lifecycle meet.

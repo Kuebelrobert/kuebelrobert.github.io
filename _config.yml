@@ -6,7 +6,17 @@ description: >-
 author: Robert
 email: robert.koerner87@googlemail.com
 baseurl: "" # subpath if this is a project site, e.g. "/blog" — leave empty for a <user>.github.io root site
-url: "https://kuebelrobert.github.io" # e.g. "https://<username>.github.io"
+# Canonical domain. A Cloudflare Worker on this domain proxies GitHub Pages and
+# gates /premium/* (see the private repo). Also used for the unlock form action.
+url: "https://kuebelrobert-dev.space"
+
+# GoatCounter (privacy-friendly, cookieless analytics) site code — the part
+# before ".goatcounter.com" in your dashboard URL. Sign up free at
+# https://www.goatcounter.com/signup, then fill this in. Leave empty to
+# disable both the sitewide tracking script and the per-post view badge.
+# For the per-post badge to show numbers, also enable "Allow adding visitor
+# counts on your website" in your GoatCounter site settings.
+goatcounter_code: "kuebelrobert"
 
 theme: minima
 
@@ -23,6 +33,8 @@ minima:
     - about.md
     - books.md
     - categories.md
+    - impressum.md
+    - privacy.md
 
 permalink: /:categories/:year/:month/:day/:title/
 

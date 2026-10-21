@@ -1,0 +1,230 @@
+# Flash memory map for the "Create the Foundation" series (Part 2).
+#
+# All addresses, sizes and sector sizes are illustrative teaching values for the blog,
+# not a real datasheet's memory map (see AGENT.md anonymization rule — the underlying
+# chip is described only as "an ARM Cortex-M7-based automotive MCU").
+#
+# attrs: closed keyword vocabulary for automation/tooling. Every region uses ONLY
+# these keywords (no others, no free text):
+#   otp          - one-time-programmable, burned at manufacturing, never rewritten
+#   production   - provisioned as part of the production process (factory step)
+#   pflash       - lives in the Program Flash bank
+#   dflash       - lives in the Data Flash bank (runtime NVM: DTCs, adaptation, config)
+#   chip_dflash  - lives in the separate, chip-internal factory D-Flash array
+#                  (NOT the same physical bank as "dflash" above)
+#   hsm          - hardware-firewalled partition reserved for the HSM core; physically
+#                  the same flash macro as the surrounding bank (pflash/dflash), but
+#                  not readable or writable by the application cores
+#   read-only    - regular write-protected flash that is immutable in the field but
+#                  NOT one-time-programmable silicon (distinct from "otp" above);
+#                  locked after production rather than burned at manufacturing
+#   asil_b       - ASIL B classified
+#   qm           - QM classified
+#   updateable   - field-updatable via the flashing/OTA mechanism
+#   mpu          - enforced by its own region on the cores' ARMv7-M MPU. Hard rule,
+#                  checked by scripts/render_flash_map.py: size is a power of two
+#                  and the start address is naturally aligned to that size.
+#   reserved     - deliberately unused. Every reserve sits directly next to the
+#                  region it belongs to (its "buddy"), so that region can double
+#                  in place and still be a single MPU region.
+#
+# Layout rule: Program Flash is built from power-of-two blocks, each aligned to its
+# own size (64 KB at 64 KB, 2 MB at 2 MB, 8 MB at 8 MB, ...). That is what turns
+# every protected region into exactly one MPU region instead of a handful of pieces.
+#
+# Classification policy: asil_b is reserved for the application software running
+# on the simplex ASIL B core (Application Code and Application Calibration).
+# Everything in the boot/security chain — ECU OTP, HSM Flash/Data Flash, Stage-1,
+# Stage-2 — is tagged qm: it's vendor-provided or general-purpose tooling/security
+# infrastructure, not classified application software. The safety argument for that
+# chain rests on immutability and verification behavior, not on an ASIL tag.
+# Caveat, to be confirmed by the safety analysis: the image *integrity* check that
+# keeps a corrupted ASIL B application from starting is a safety mechanism against
+# random hardware faults and will likely be required at ASIL B, wherever it runs.
+# Chip OTP is left untagged for asil_b/qm: it's inert factory silicon data.
+#
+# Edit this file, then run scripts/render_flash_map.py to regenerate the SVG.
+
+document:
+  title: "BCU ASIL B — Flash Memory Map"
+  subtitle: "1 simplex ASIL B core + 5 independent QM cores · MPU-aligned (power-of-two) layout"
+  address_unit: bytes
+
+banks:
+  - name: "Chip D-Flash"
+    base: 0x08000000          # illustrative separate physical array, distinct from
+                               # both Program Flash and Data Flash below
+    size: 0x00004000
+    regions:
+      - name: "Chip OTP"
+        start: 0x08000000
+        size: 0x00004000       # 16 KB
+        sector_size: 0x00002000   # 8 KB sectors, 2 sectors
+        attrs: [otp, production, chip_dflash]
+        note: >
+          Reset address, trim data. Burned once in production, identical for every
+          chip — lives in its own small factory D-Flash array, physically and
+          logically separate from both the Program Flash and the Data Flash bank.
+
+  - name: "Program Flash"
+    base: 0x01000000        # 16 MB-aligned, and deliberately NOT at 0x00000000: on a
+                            # Cortex-M7 that address range belongs to the I-TCM
+    size: 0x01000000        # 16 MB program flash
+    regions:
+      # --- Boot & security area: the first 1 MB -------------------------------
+      - name: "ECU OTP"
+        start: 0x01000000
+        size: 0x00010000     # 64 KB
+        sector_size: 0x00008000  # 32 KB sectors, 2 sectors
+        attrs: [otp, production, pflash, qm, mpu]
+        note: >
+          VIN, ECU serial number, hardware identifier — whatever makes this specific
+          ECU unique, decided by customer requirements. Burned once, unique per ECU,
+          read-only for the application. 64 KB rather than the 32 KB it needs today:
+          the second sector is spare OTP, and it keeps Stage-1 on a 64 KB boundary.
+
+      - name: "Stage-1 Bootloader"
+        start: 0x01010000
+        size: 0x00010000     # 64 KB
+        sector_size: 0x00008000  # 32 KB sectors, 2 sectors
+        attrs: [pflash, qm, read-only, mpu]
+        note: >
+          Verifies, in sync with the HSM, that Stage-2 (or the application) is
+          trustworthy before handing off to it. qm as a project decision: the
+          cryptographic verification happens in the HSM. The integrity check of the
+          ASIL B image is the exception and likely ASIL B (see classification policy). read-only, not otp: regular write-protected flash, locked after
+          production, not updateable in the field.
+
+      - name: "Reserved (boot)"
+        start: 0x01020000
+        size: 0x00020000     # 128 KB
+        sector_size: 0x00008000  # 32 KB sectors, 4 sectors
+        attrs: [pflash, reserved]
+        note: >
+          Buddy of ECU OTP + Stage-1: lets the boot area grow to 256 KB without
+          moving anything. Needs no MPU region — default-deny already covers it.
+
+      - name: "HSM Flash"
+        start: 0x01040000
+        size: 0x00040000     # 256 KB
+        sector_size: 0x00008000  # 32 KB sectors, 8 sectors
+        attrs: [pflash, hsm, production, qm, updateable]
+        note: >
+          Firmware and configuration for the on-chip HSM core: key material, security
+          policies, crypto services. Same physical Program Flash array, but a hardware
+          firewall makes it invisible to the application cores — enforced by the
+          firewall, not the MPU, so it carries no mpu tag. Still sized and aligned as
+          a power-of-two block so it doesn't break the alignment of everything after
+          it. updateable assumes the vendor supports signed HSM firmware updates —
+          confirm against the actual target.
+
+      - name: "Stage-2 / Flash Bootloader"
+        start: 0x01080000
+        size: 0x00040000     # 256 KB
+        sector_size: 0x00008000  # 32 KB sectors, 8 sectors
+        attrs: [pflash, qm, updateable, mpu]
+        note: >
+          Runs the flashing protocol. qm: general-purpose flashing tooling, not
+          safety-relevant verification logic — that's Stage-1's job.
+
+      - name: "Reserved (Stage-2)"
+        start: 0x010C0000
+        size: 0x00040000     # 256 KB
+        sector_size: 0x00008000  # 32 KB sectors, 8 sectors
+        attrs: [pflash, reserved]
+        note: >
+          Buddy of Stage-2: the flash bootloader can grow to 512 KB in place
+          (still one MPU region at 0x01080000) — e.g. when a second transport
+          or a bigger crypto stack shows up later.
+
+      # --- ASIL B application area ------------------------------------------------
+      - name: "Application Calibration (ASIL B)"
+        start: 0x01100000
+        size: 0x00080000     # 512 KB
+        sector_size: 0x00008000  # 32 KB sectors, 16 sectors
+        attrs: [pflash, asil_b, updateable, mpu]
+        note: >
+          Split from code on purpose — see Part 2's updateability reasoning.
+          Estimated need is ~384 KB; rounded up to the next power of two.
+
+      - name: "Reserved (ASIL B calibration)"
+        start: 0x01180000
+        size: 0x00080000     # 512 KB
+        sector_size: 0x00008000  # 32 KB sectors, 16 sectors
+        attrs: [pflash, reserved]
+        note: >
+          Buddy of Application Calibration (ASIL B): calibration can grow to 1 MB
+          in place and remain a single MPU region at 0x01100000.
+
+      - name: "Application Code (ASIL B)"
+        start: 0x01200000
+        size: 0x00200000     # 2 MB
+        sector_size: 0x00008000  # 32 KB sectors, 64 sectors
+        attrs: [pflash, asil_b, updateable, mpu]
+        note: >
+          Runs on the simplex ASIL B core. Estimated need incl. ~30% safety buffer
+          is ~1.94 MB; rounded up to 2 MB, aligned at 2 MB — one MPU region.
+
+      # --- QM application area -----------------------------------------------------
+      - name: "QM Application Calibration (5 cores)"
+        start: 0x01400000
+        size: 0x00200000     # 2 MB
+        sector_size: 0x00008000  # 32 KB sectors, 64 sectors
+        attrs: [pflash, qm, updateable, mpu]
+        note: >
+          Calibration for all five QM cores. Same 1:4 calibration-to-code ratio as
+          the ASIL B side.
+
+      - name: "Reserved (QM calibration)"
+        start: 0x01600000
+        size: 0x00200000     # 2 MB
+        sector_size: 0x00008000  # 32 KB sectors, 64 sectors
+        attrs: [pflash, reserved]
+        note: >
+          Buddy of QM Application Calibration: it can grow to 4 MB in place and
+          remain a single MPU region at 0x01400000.
+
+      - name: "QM Application Code (5 cores)"
+        start: 0x01800000
+        size: 0x00800000     # 8 MB
+        sector_size: 0x00008000  # 32 KB sectors, 256 sectors
+        attrs: [pflash, qm, updateable, mpu]
+        note: >
+          Code for all five QM cores. 8 MB, aligned at 8 MB — the upper half of
+          the bank, one MPU region.
+
+  - name: "Data Flash"
+    base: 0x10000000          # illustrative separate physical bank/array
+    size: 0x00080000          # 512 KB — power of two, aligned: the application
+                              # cores' MPU covers the whole bank with ONE region
+    regions:
+      - name: "HSM Data Flash"
+        start: 0x10000000
+        size: 0x00008000       # 32 KB — placeholder until the HSM NVM footprint
+                                # (key slots, monotonic counters, certificates) is known
+        sector_size: 0x00002000   # 8 KB sectors, 4 sectors
+        attrs: [dflash, hsm]
+        note: >
+          NVM reserved for the HSM core: key storage, monotonic counters,
+          certificates/life-cycle state. Firewalled off like HSM Flash, so the
+          application MPU doesn't need to carve it out — the bank-wide MPU region
+          plus the HSM firewall together give the right result.
+
+      - name: "ASIL B NVM"
+        start: 0x10008000
+        size: 0x00008000       # 32 KB
+        sector_size: 0x00002000   # 8 KB sectors, 4 sectors
+        attrs: [dflash, asil_b]
+        note: >
+          Non-volatile data owned by the ASIL B partition: lamp fault counters,
+          safety-relevant configuration, safe-state history. Written only by a small
+          NVM handler on the ASIL B core, with a CRC per record and a redundant copy.
+          Protected by the flash controller's per-sector program/erase locks, not by
+          the MPU — program and erase never go through the MPU at all (see Part 3).
+
+      - name: "QM NVM (DTCs, adaptation, config)"
+        start: 0x10010000
+        size: 0x00070000       # 448 KB
+        sector_size: 0x00002000   # 8 KB sectors, 56 sectors
+        attrs: [dflash, qm]
+        note: "Runtime NVM of the QM partitions, wear-leveled and GC-managed by the NVM manager on QM Core 5 — see the Garbage Collection post. Not 'updateable': it's written continuously by the running application, not flashed via the update mechanism. Deliberately not power-of-two: it's never its own MPU region — the whole 512 KB bank is."

@@ -1,0 +1,54 @@
+<section id="unlock" class="premium-unlock">
+  <h2>Read the full article</h2>
+  <p>The rest of this article is free, but not anonymous: tell me who you are and you get access to all members-only articles on this blog. No newsletter, no spam, no selling your data.</p>
+
+  <p class="premium-unlock-msg" data-reason="required" hidden>This article needs a quick unlock first.</p>
+  <p class="premium-unlock-msg" data-reason="invalid" hidden>Please enter a valid email address and accept the privacy policy.</p>
+  <p class="premium-unlock-msg" data-reason="denied" hidden>Access isn't available for this email address. If you think that's a mistake, <a href="mailto:kuebelroberttech@googlemail.com">send me a mail</a>.</p>
+
+  <form method="post" action="{{ site.url }}/api/unlock">
+    <input type="hidden" name="slug" value="{{ page.premium_slug }}">
+    <label>Email <span aria-hidden="true">*</span>
+      <input type="email" name="email" required maxlength="254" autocomplete="email">
+    </label>
+    <label>Name
+      <input type="text" name="name" maxlength="100" autocomplete="name">
+    </label>
+    <label>Company
+      <input type="text" name="company" maxlength="100" autocomplete="organization">
+    </label>
+    <label>Which topic interests you most?
+      <textarea name="interest" rows="3" maxlength="500"></textarea>
+    </label>
+    <label class="premium-unlock-hp" aria-hidden="true">Website
+      <input type="text" name="website" tabindex="-1" autocomplete="off">
+    </label>
+    <label class="premium-unlock-consent">
+      <input type="checkbox" name="consent" value="yes" required>
+      I agree that my details are stored to grant me access, as described in the <a href="{{ '/privacy.html' | relative_url }}">privacy policy</a>. I can have them deleted at any time.
+    </label>
+    <button type="submit">Unlock</button>
+  </form>
+</section>
+
+<style>
+  .premium-unlock { margin-top: 2.5em; padding: 1.25em 1.5em; border: 1px solid currentColor; border-radius: 6px; }
+  .premium-unlock form { display: grid; gap: 0.9em; }
+  .premium-unlock label { display: grid; gap: 0.3em; }
+  .premium-unlock input[type=email], .premium-unlock input[type=text], .premium-unlock textarea {
+    font: inherit; padding: 0.45em 0.6em; border-radius: 4px; border: 1px solid #888; width: 100%; box-sizing: border-box;
+  }
+  .premium-unlock .premium-unlock-consent { display: flex; gap: 0.6em; align-items: flex-start; }
+  .premium-unlock .premium-unlock-consent input { margin-top: 0.35em; }
+  .premium-unlock .premium-unlock-hp { position: absolute; left: -10000px; }
+  .premium-unlock button { justify-self: start; font: inherit; padding: 0.5em 1.4em; border-radius: 4px; cursor: pointer; }
+  .premium-unlock-msg { font-weight: bold; }
+</style>
+
+<script>
+  (function () {
+    var reason = new URLSearchParams(location.search).get("unlock");
+    var msg = reason && document.querySelector('.premium-unlock-msg[data-reason="' + reason + '"]');
+    if (msg) msg.hidden = false;
+  })();
+</script>
