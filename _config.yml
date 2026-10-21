@@ -36,7 +36,7 @@ minima:
     - impressum.md
     - privacy.md
 
-permalink: /:categories/:year/:month/:day/:title/
+permalink: /:year/:month/:day/:title/
 
 markdown: kramdown
 kramdown:

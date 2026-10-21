@@ -14,7 +14,7 @@ layout: default
         • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
       {%- endif -%}
       {%- if site.goatcounter_code -%}
-        • <img src="https://{{ site.goatcounter_code }}.goatcounter.com/counter/{{ page.url }}.svg" alt="view count" style="height:1em;vertical-align:middle;">
+        • <img src="https://{{ site.goatcounter_code }}.goatcounter.com/counter/{{ page.url | url_encode }}.svg" alt="view count" style="height:1em;vertical-align:middle;">
       {%- endif -%}
     </p>
   </header>
