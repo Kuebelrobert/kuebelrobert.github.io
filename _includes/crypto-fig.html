@@ -1,0 +1,278 @@
+{%- comment -%}
+  Illustrations for the security vocabulary posts (SVG, theme tokens from mpu-matrix-base.html).
+  Usage: {% include crypto-fig.html fig="hash" caption="..." %}
+  Figures: cast, hash, mac, keys, sigmac, dh. Styles and shared icons are emitted once per page.
+{%- endcomment -%}
+{% include mpu-matrix-base.html %}
+{%- unless crypto_fig_base_loaded -%}
+{%- assign crypto_fig_base_loaded = true -%}
+<style>
+.cf svg { display: block; width: 100%; max-width: 760px; height: auto; margin: 0 auto; }
+.cf .t { fill: var(--text-primary); font-size: 15px; }
+.cf .b { font-weight: 700; }
+.cf .s { fill: var(--text-secondary); font-size: 12.5px; }
+.cf .m { fill: var(--text-primary); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
+.cf .c { text-anchor: middle; }
+.cf .e { text-anchor: end; }
+.cf .box { fill: var(--surface-1); stroke: var(--text-secondary); stroke-width: 1.5; }
+.cf .gbox { fill: var(--surface-1); stroke: var(--good); stroke-width: 2.5; }
+.cf .rbox { fill: var(--surface-1); stroke: var(--critical); stroke-width: 2.5; }
+.cf .wbox { fill: var(--surface-1); stroke: var(--wrap); stroke-width: 2.5; }
+.cf .pn { fill: none; stroke: var(--text-secondary); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.cf .ln { fill: none; stroke: var(--text-secondary); stroke-width: 2; }
+.cf .lg { fill: none; stroke: var(--good); stroke-width: 2.5; }
+.cf .lr { fill: none; stroke: var(--critical); stroke-width: 2.5; }
+.cf .dash { stroke-dasharray: 6 5; }
+.cf .fg { fill: var(--good); }
+.cf .fr { fill: var(--critical); }
+.cf .fw { fill: var(--wrap); }
+.cf .tg { fill: var(--good); font-weight: 700; font-size: 14px; }
+.cf .tr { fill: var(--critical); font-weight: 700; font-size: 14px; }
+.cf .pr { stroke: var(--critical); }
+.cf .pg { stroke: var(--text-primary); }
+.mpu-matrix .ahp { fill: var(--text-secondary); }
+.mpu-matrix .ahg { fill: var(--good); }
+.mpu-matrix .ahr { fill: var(--critical); }
+.cf figcaption { font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem; }
+</style>
+<svg class="mpu-matrix" width="0" height="0" style="position:absolute;margin:0" aria-hidden="true" focusable="false">
+<defs>
+<marker id="cf-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ahp" d="M0,0 L8,4 L0,8 z"/></marker>
+<marker id="cf-ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ahg" d="M0,0 L8,4 L0,8 z"/></marker>
+<marker id="cf-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path class="ahr" d="M0,0 L8,4 L0,8 z"/></marker>
+<g id="cf-key" fill="none" stroke="#d89a00" stroke-width="4" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M18,10 H56 M44,10 V21 M52,10 V18"/></g>
+<g id="cf-stamp"><rect x="7" y="0" width="20" height="28" rx="5" fill="#d89a00"/><rect x="0" y="28" width="34" height="8" rx="2" fill="#a56f00"/><rect x="3" y="36" width="28" height="5" rx="1" fill="#7a5200"/></g>
+<g id="cf-lens" fill="none" stroke="#3987e5" stroke-width="4" stroke-linecap="round"><circle cx="14" cy="14" r="12"/><path d="M23,23 L38,38"/></g>
+<g id="cf-person" fill="none" stroke-width="3" stroke-linecap="round"><circle cx="0" cy="0" r="12"/><path d="M0,12 V48 M-18,24 H18 M0,48 L-14,72 M0,48 L14,72"/></g>
+<g id="cf-lock"><path d="M-17,0 V-14 a17,17 0 0 1 34,0 V0" fill="none" stroke="#9a9a9f" stroke-width="7"/><rect x="-26" y="0" width="52" height="38" rx="6" fill="#d89a00"/><circle cx="0" cy="15" r="5" fill="#3a2a00"/><rect x="-2.5" y="15" width="5" height="14" fill="#3a2a00"/></g>
+</defs>
+</svg>
+{%- endunless -%}
+{%- if include.fig == "cast" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-cast">
+<svg viewBox="0 0 760 330" role="img" aria-labelledby="cf-cast-t cf-cast-d">
+<title id="cf-cast-t">The cast: key fob, car and Mallory</title>
+<desc id="cf-cast-d">A key fob on the left sends an UNLOCK message by radio to a car on the right. Mallory, a person with a laptop in the middle at the top, can hear every message.</desc>
+<!-- key fob -->
+<rect class="box" x="55" y="170" width="76" height="116" rx="24"/>
+<circle class="box" cx="93" cy="188" r="5"/>
+<circle class="fg" cx="93" cy="228" r="13"/>
+<text class="t b c" x="93" y="312">Key fob</text>
+<!-- radio waves -->
+<path class="ln" d="M148,205 q14,22 0,44 M162,195 q20,32 0,64 M176,185 q26,42 0,84"/>
+<!-- message path -->
+<path class="ln dash" d="M200,227 H520" marker-end="url(#cf-a)"/>
+<rect class="box" x="300" y="206" width="120" height="42" rx="21"/>
+<text class="m c" x="360" y="232">UNLOCK</text>
+<!-- car -->
+<path class="box" d="M545,270 v-26 q0,-8 9,-9 l36,-6 l22,-30 q4,-5 11,-5 h62 q8,0 12,5 l22,30 l30,6 q9,2 9,10 v25 z"/>
+<path class="box" d="M608,205 h40 v28 h-58 z M656,205 h26 l20,28 h-46 z"/>
+<circle class="fg" cx="595" cy="272" r="15"/><circle class="box" cx="595" cy="272" r="6"/>
+<circle class="fg" cx="700" cy="272" r="15"/><circle class="box" cx="700" cy="272" r="6"/>
+<text class="t b c" x="648" y="312">Car (the ECU)</text>
+<!-- Mallory -->
+<use href="#cf-person" class="pr" x="360" y="48"/>
+<rect class="rbox" x="338" y="104" width="44" height="28" rx="3"/>
+<path class="lr" d="M330,134 H390"/>
+<text class="tr c" x="360" y="26">Mallory</text>
+<path class="lr dash" d="M360,142 V196" marker-end="url(#cf-ar)"/>
+<text class="s" x="372" y="170">hears every message</text>
+<text class="s" x="430" y="58">listens, records,</text>
+<text class="s" x="430" y="75">replays, forges</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
+{%- if include.fig == "hash" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-hash">
+<svg viewBox="0 0 760 330" role="img" aria-labelledby="cf-hash-t cf-hash-d">
+<title id="cf-hash-t">A hash function turns any input into a fixed-size fingerprint</title>
+<desc id="cf-hash-d">Three inputs of very different size, the word UNLOCK, a 6 megabyte firmware image and an empty input, all go into SHA-256 and each comes out as a 32-byte digest of the same size. An arrow back from the digests to the inputs is crossed out: there is no way back.</desc>
+<text class="s" x="20" y="24">Input: any size</text>
+<text class="s" x="500" y="24">Output: always 32 bytes</text>
+<rect class="box" x="20" y="40" width="110" height="44" rx="6"/><text class="m c" x="75" y="67">UNLOCK</text>
+<rect class="box" x="20" y="116" width="230" height="44" rx="6"/><text class="t c" x="135" y="143">a 6 MB firmware image</text>
+<rect class="box" x="20" y="192" width="80" height="44" rx="6"/><text class="t c" x="60" y="219">(empty)</text>
+<path class="ln" d="M130,62 L292,112" marker-end="url(#cf-a)"/><path class="ln" d="M250,138 H292" marker-end="url(#cf-a)"/><path class="ln" d="M100,214 L292,166" marker-end="url(#cf-a)"/>
+<rect class="wbox" x="296" y="70" width="150" height="150" rx="14"/>
+<text class="t b c" x="371" y="132">SHA-256</text>
+<text class="s c" x="371" y="154">public algorithm</text>
+<text class="s c" x="371" y="171">no key at all</text>
+<path class="ln" d="M446,118 L494,66" marker-end="url(#cf-a)"/><path class="ln" d="M446,145 H494" marker-end="url(#cf-a)"/><path class="ln" d="M446,172 L494,212" marker-end="url(#cf-a)"/>
+<rect class="box" x="498" y="40" width="242" height="44" rx="6"/><text class="m c" x="619" y="67">0991 1d6f … 87fa</text>
+<rect class="box" x="498" y="116" width="242" height="44" rx="6"/><text class="m c" x="619" y="143">ad9f bb35 … cb2e</text>
+<rect class="box" x="498" y="192" width="242" height="44" rx="6"/><text class="m c" x="619" y="219">e3b0 c442 … b855</text>
+<path class="lr dash" d="M700,272 H80" marker-end="url(#cf-ar)"/>
+<path class="lr" d="M388,258 l24,28 M412,258 l-24,28"/>
+<text class="tr c" x="400" y="318">no way back, and that is the point</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
+{%- if include.fig == "mac" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-mac">
+<svg viewBox="0 0 760 360" role="img" aria-labelledby="cf-mac-t cf-mac-d">
+<title id="cf-mac-t">A MAC works like a wax seal that only key holders can make</title>
+<desc id="cf-mac-d">Top: the key fob and the car both hold the same secret key K. The fob sends UNLOCK number 41 with a tag, and the car recomputes the tag and accepts it. Bottom: Mallory has no key, sends UNLOCK number 99 with a guessed tag, and the car drops it because the tag does not match.</desc>
+<!-- top lane -->
+<rect class="gbox" x="20" y="20" width="150" height="120" rx="10"/>
+<text class="t b c" x="95" y="46">Key fob</text>
+<use href="#cf-key" x="67" y="62"/>
+<text class="s c" x="95" y="112">secret key K</text>
+<rect class="box" x="250" y="46" width="260" height="68" rx="8"/>
+<text class="m" x="268" y="86">UNLOCK | 41</text>
+<circle class="fg" cx="466" cy="80" r="24"/>
+<text class="c" x="466" y="85" style="fill:#fff;font-size:13px;font-weight:700">tag</text>
+<path class="ln" d="M172,80 H246" marker-end="url(#cf-a)"/>
+<path class="ln" d="M512,80 H586" marker-end="url(#cf-a)"/>
+<rect class="gbox" x="590" y="20" width="150" height="120" rx="10"/>
+<text class="t b c" x="665" y="46">Car</text>
+<use href="#cf-key" x="637" y="62"/>
+<text class="s c" x="665" y="112">same secret key K</text>
+<text class="tg" x="250" y="136">car recomputes the tag, compares: ✓ accepted</text>
+<!-- bottom lane -->
+<rect class="rbox" x="20" y="220" width="150" height="120" rx="10"/>
+<text class="tr c" x="95" y="246">Mallory</text>
+<text class="s c" x="95" y="285">has no key</text>
+<text class="s c" x="95" y="303">can only guess</text>
+<rect class="box" x="250" y="246" width="260" height="68" rx="8"/>
+<text class="m" x="268" y="286">UNLOCK | 99</text>
+<circle cx="466" cy="280" r="24" fill="none" stroke="var(--critical)" stroke-width="2.5" stroke-dasharray="4 3"/>
+<text class="tr c" x="466" y="286">?</text>
+<path class="lr" d="M172,280 H246" marker-end="url(#cf-ar)"/>
+<path class="lr" d="M512,280 H586" marker-end="url(#cf-ar)"/>
+<rect class="rbox" x="590" y="220" width="150" height="120" rx="10"/>
+<text class="t b c" x="665" y="246">Car</text>
+<text class="tr c" x="665" y="288">✗ tag mismatch</text>
+<text class="s c" x="665" y="308">frame dropped</text>
+<text class="tr" x="250" y="336">forging the tag needs the key</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
+{%- if include.fig == "keys" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-keys">
+<svg viewBox="0 0 760 330" role="img" aria-labelledby="cf-keys-t cf-keys-d">
+<title id="cf-keys-t">Symmetric keys are one shared key, asymmetric keys are a key pair</title>
+<desc id="cf-keys-d">Left: symmetric. A padlock with two identical keys, one held by the fob and one held by the car; the same key locks and unlocks. Right: asymmetric. A mailbox: the public key is the slot that anyone can drop a letter into, the private key opens the box and stays with the owner.</desc>
+<rect class="box" x="10" y="10" width="360" height="310" rx="10"/>
+<rect class="box" x="390" y="10" width="360" height="310" rx="10"/>
+<text class="t b c" x="190" y="40">Symmetric: one shared key</text>
+<use href="#cf-lock" x="190" y="100"/>
+<use href="#cf-key" x="40" y="150"/>
+<use href="#cf-key" x="272" y="150"/>
+<text class="s c" x="68" y="196">Key fob</text>
+<text class="s c" x="300" y="196">Car</text>
+<path class="ln dash" d="M104,160 L156,130 M272,160 L224,130" marker-end="url(#cf-a)"/>
+<text class="t c" x="190" y="232">The same key locks and unlocks.</text>
+<text class="s c" x="190" y="262">Fast and simple. The hard part:</text>
+<text class="s c" x="190" y="280">how did both sides get a copy,</text>
+<text class="s c" x="190" y="298">and nobody else?</text>
+<text class="t b c" x="570" y="40">Asymmetric: a key pair</text>
+<!-- mailbox -->
+<rect x="500" y="76" width="140" height="84" rx="14" fill="#2a78d6"/>
+<rect x="500" y="76" width="140" height="84" rx="14" fill="none" stroke="var(--text-secondary)" stroke-width="1.5"/>
+<rect x="530" y="92" width="80" height="9" rx="4" fill="var(--surface-1)"/>
+<rect x="560" y="160" width="20" height="40" fill="var(--text-secondary)"/>
+<text class="c" x="570" y="136" style="fill:#fff;font-size:13px;font-weight:700">Owner's mailbox</text>
+<path class="ln dash" d="M430,92 H520" marker-end="url(#cf-a)"/>
+<text class="s c" x="456" y="82">anyone</text>
+<use href="#cf-key" x="520" y="206" />
+<text class="s" x="590" y="226">private key</text>
+<text class="t c" x="570" y="262">Public key = the slot: anyone can use it.</text>
+<text class="t c" x="570" y="282">Private key = opens the box: one owner.</text>
+<text class="s c" x="570" y="304">Slower, but no secret has to be shared first.</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
+{%- if include.fig == "sigmac" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-sigmac">
+<svg viewBox="0 0 760 360" role="img" aria-labelledby="cf-sigmac-t cf-sigmac-d">
+<title id="cf-sigmac-t">MAC versus signature: who can create a valid seal</title>
+<desc id="cf-sigmac-d">Left: with a MAC, key fob and car hold the same stamp, so both can create and check seals, and the car could also forge fob messages. Right: with a signature, only the manufacturer holds the private stamp. Every ECU only holds the public checker: it can verify a seal but cannot create one, so extracting it from one ECU gives an attacker nothing.</desc>
+<rect class="box" x="10" y="10" width="360" height="340" rx="10"/>
+<rect class="box" x="390" y="10" width="360" height="340" rx="10"/>
+<text class="t b c" x="190" y="40">MAC: everybody holds the stamp</text>
+<rect class="box" x="30" y="64" width="140" height="96" rx="8"/>
+<text class="t b c" x="100" y="88">Key fob</text>
+<use href="#cf-stamp" x="83" y="100"/>
+<rect class="box" x="210" y="64" width="140" height="96" rx="8"/>
+<text class="t b c" x="280" y="88">Car</text>
+<use href="#cf-stamp" x="263" y="100"/>
+<path class="lg" d="M172,112 H208" marker-end="url(#cf-ag)"/>
+<path class="lg" d="M208,134 H172" marker-end="url(#cf-ag)"/>
+<text class="tg c" x="190" y="196">both can create seals</text>
+<text class="tg c" x="190" y="218">both can check seals</text>
+<text class="tr c" x="190" y="262">so the car could also</text>
+<text class="tr c" x="190" y="282">forge fob messages</text>
+<text class="s c" x="190" y="316">Fine on a bus where every ECU</text>
+<text class="s c" x="190" y="334">is trusted equally.</text>
+<text class="t b c" x="570" y="40">Signature: one stamp, many checkers</text>
+<rect class="gbox" x="410" y="64" width="140" height="96" rx="8"/>
+<text class="t b c" x="480" y="88">Manufacturer</text>
+<use href="#cf-stamp" x="463" y="100"/>
+<text class="s c" x="480" y="152">private stamp</text>
+<rect class="box" x="590" y="64" width="140" height="28" rx="6"/>
+<rect class="box" x="590" y="98" width="140" height="28" rx="6"/>
+<rect class="box" x="590" y="132" width="140" height="28" rx="6"/>
+<text class="t c" x="660" y="83">ECU 1</text><text class="t c" x="660" y="117">ECU 2</text><text class="t c" x="660" y="151">ECU 3</text>
+<use href="#cf-lens" transform="translate(696,67) scale(0.55)"/><use href="#cf-lens" transform="translate(696,101) scale(0.55)"/><use href="#cf-lens" transform="translate(696,135) scale(0.55)"/>
+<path class="lg" d="M552,112 H586" marker-end="url(#cf-ag)"/>
+<text class="tg c" x="570" y="196">every ECU can check seals</text>
+<text class="tr c" x="570" y="218">no ECU can create one</text>
+<text class="s c" x="570" y="262">The checker is the public key.</text>
+<text class="s c" x="570" y="282">Extract it from one ECU and the</text>
+<text class="s c" x="570" y="302">attacker has learned nothing secret.</text>
+<use href="#cf-lens" x="552" y="316" />
+<text class="s" x="598" y="338">= the public key</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
+{%- if include.fig == "dh" -%}
+<figure class="viz-root mpu-matrix cf" id="cf-dh">
+<svg viewBox="0 0 760 570" role="img" aria-labelledby="cf-dh-t cf-dh-d">
+<title id="cf-dh-t">Diffie-Hellman explained with paint</title>
+<desc id="cf-dh-d">Four steps. One: fob and car agree on a public colour, yellow. Two: each mixes in a secret colour; the fob adds red and gets orange, the car adds blue and gets green. Three: they swap the mixtures in public; Mallory can see yellow, orange and green. Four: each adds their own secret to the other's mixture, red to green and blue to orange, and both end up with the same brown. Unmixing paint is hard, so Mallory cannot get the brown.</desc>
+<text class="t b c" x="120" y="24">Key fob</text>
+<text class="t b c" x="380" y="24">Public (Mallory sees this)</text>
+<text class="t b c" x="640" y="24">Car</text>
+<!-- row 1 -->
+<text class="s" x="10" y="52">1. Agree on a public colour</text>
+<circle cx="120" cy="92" r="20" fill="#f2c200"/><circle cx="380" cy="92" r="20" fill="#f2c200"/><circle cx="640" cy="92" r="20" fill="#f2c200"/>
+<!-- row 2 -->
+<text class="s" x="10" y="150">2. Each side mixes in a secret colour</text>
+<circle cx="55" cy="196" r="18" fill="#f2c200"/><text class="t c" x="85" y="201">+</text>
+<circle cx="115" cy="196" r="18" fill="#d03b3b" stroke="var(--text-primary)" stroke-width="2" stroke-dasharray="3 3"/><text class="t c" x="150" y="201">=</text>
+<circle cx="185" cy="196" r="20" fill="#ee8a1c"/>
+<text class="s c" x="115" y="232">secret red</text>
+<circle cx="575" cy="196" r="18" fill="#f2c200"/><text class="t c" x="605" y="201">+</text>
+<circle cx="635" cy="196" r="18" fill="#2a78d6" stroke="var(--text-primary)" stroke-width="2" stroke-dasharray="3 3"/><text class="t c" x="670" y="201">=</text>
+<circle cx="705" cy="196" r="20" fill="#4aa02c"/>
+<text class="s c" x="635" y="232">secret blue</text>
+<!-- row 3 -->
+<text class="s" x="10" y="274">3. Swap the mixtures, in public</text>
+<circle cx="185" cy="318" r="20" fill="#ee8a1c"/>
+<circle cx="705" cy="318" r="20" fill="#4aa02c"/>
+<path class="ln" d="M215,308 H335" marker-end="url(#cf-a)"/>
+<path class="ln" d="M675,332 H425" marker-end="url(#cf-a)"/>
+<circle cx="360" cy="316" r="13" fill="#ee8a1c"/><circle cx="400" cy="330" r="13" fill="#4aa02c"/>
+<text class="s c" x="380" y="362">Mallory sees yellow, orange, green</text>
+<!-- row 4 -->
+<text class="s" x="10" y="394">4. Each adds their own secret to the other's mixture</text>
+<circle cx="55" cy="440" r="18" fill="#4aa02c"/><text class="t c" x="85" y="445">+</text>
+<circle cx="115" cy="440" r="18" fill="#d03b3b" stroke="var(--text-primary)" stroke-width="2" stroke-dasharray="3 3"/><text class="t c" x="150" y="445">=</text>
+<circle cx="185" cy="440" r="22" fill="#7a5233" stroke="var(--good)" stroke-width="3"/>
+<circle cx="575" cy="440" r="18" fill="#ee8a1c"/><text class="t c" x="605" y="445">+</text>
+<circle cx="635" cy="440" r="18" fill="#2a78d6" stroke="var(--text-primary)" stroke-width="2" stroke-dasharray="3 3"/><text class="t c" x="670" y="445">=</text>
+<circle cx="705" cy="440" r="22" fill="#7a5233" stroke="var(--good)" stroke-width="3"/>
+<circle cx="380" cy="440" r="22" fill="#7a5233" stroke="var(--good)" stroke-width="3"/>
+<text class="tg c" x="380" y="486">same brown on both sides</text>
+<text class="s c" x="380" y="504">= the shared secret</text>
+<text class="tr c" x="380" y="534">Mallory cannot get to the brown: it needs a secret colour he never saw.</text>
+<text class="s c" x="380" y="554">Unmixing paint is hard. Real DH uses maths where "unmixing" is just as hard.</text>
+</svg>
+<figcaption>{{ include.caption }}</figcaption>
+</figure>
+{%- endif -%}
