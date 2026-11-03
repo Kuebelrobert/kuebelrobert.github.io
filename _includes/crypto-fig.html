@@ -51,8 +51,8 @@
 {%- if include.fig == "cast" -%}
 <figure class="viz-root mpu-matrix cf" id="cf-cast">
 <svg viewBox="0 0 760 330" role="img" aria-labelledby="cf-cast-t cf-cast-d">
-<title id="cf-cast-t">The cast: key fob, car and Mallory</title>
-<desc id="cf-cast-d">A key fob on the left sends an UNLOCK message by radio to a car on the right. Mallory, a person with a laptop in the middle at the top, can hear every message.</desc>
+<title id="cf-cast-t">The cast: key fob, car and attacker</title>
+<desc id="cf-cast-d">A key fob on the left sends an UNLOCK message by radio to a car on the right. The attacker, a person with a laptop in the middle at the top, can hear every message.</desc>
 <!-- key fob -->
 <rect class="box" x="55" y="170" width="76" height="116" rx="24"/>
 <circle class="box" cx="93" cy="188" r="5"/>
@@ -70,11 +70,11 @@
 <circle class="fg" cx="595" cy="272" r="15"/><circle class="box" cx="595" cy="272" r="6"/>
 <circle class="fg" cx="700" cy="272" r="15"/><circle class="box" cx="700" cy="272" r="6"/>
 <text class="t b c" x="648" y="312">Car (the ECU)</text>
-<!-- Mallory -->
+<!-- Attacker -->
 <use href="#cf-person" class="pr" x="360" y="48"/>
 <rect class="rbox" x="338" y="104" width="44" height="28" rx="3"/>
 <path class="lr" d="M330,134 H390"/>
-<text class="tr c" x="360" y="26">Mallory</text>
+<text class="tr c" x="360" y="26">Attacker</text>
 <path class="lr dash" d="M360,142 V196" marker-end="url(#cf-ar)"/>
 <text class="s" x="372" y="170">hears every message</text>
 <text class="s" x="430" y="58">listens, records,</text>
@@ -113,7 +113,7 @@
 <figure class="viz-root mpu-matrix cf" id="cf-mac">
 <svg viewBox="0 0 760 360" role="img" aria-labelledby="cf-mac-t cf-mac-d">
 <title id="cf-mac-t">A MAC works like a wax seal that only key holders can make</title>
-<desc id="cf-mac-d">Top: the key fob and the car both hold the same secret key K. The fob sends UNLOCK number 41 with a tag, and the car recomputes the tag and accepts it. Bottom: Mallory has no key, sends UNLOCK number 99 with a guessed tag, and the car drops it because the tag does not match.</desc>
+<desc id="cf-mac-d">Top: the key fob and the car both hold the same secret key K. The fob sends UNLOCK number 41 with a tag, and the car recomputes the tag and accepts it. Bottom: the attacker has no key, sends UNLOCK number 99 with a guessed tag, and the car drops it because the tag does not match.</desc>
 <!-- top lane -->
 <rect class="gbox" x="20" y="20" width="150" height="120" rx="10"/>
 <text class="t b c" x="95" y="46">Key fob</text>
@@ -132,7 +132,7 @@
 <text class="tg" x="250" y="136">car recomputes the tag, compares: ✓ accepted</text>
 <!-- bottom lane -->
 <rect class="rbox" x="20" y="220" width="150" height="120" rx="10"/>
-<text class="tr c" x="95" y="246">Mallory</text>
+<text class="tr c" x="95" y="246">Attacker</text>
 <text class="s c" x="95" y="285">has no key</text>
 <text class="s c" x="95" y="303">can only guess</text>
 <rect class="box" x="250" y="246" width="260" height="68" rx="8"/>
@@ -234,9 +234,9 @@
 <figure class="viz-root mpu-matrix cf" id="cf-dh">
 <svg viewBox="0 0 760 570" role="img" aria-labelledby="cf-dh-t cf-dh-d">
 <title id="cf-dh-t">Diffie-Hellman explained with paint</title>
-<desc id="cf-dh-d">Four steps. One: fob and car agree on a public colour, yellow. Two: each mixes in a secret colour; the fob adds red and gets orange, the car adds blue and gets green. Three: they swap the mixtures in public; Mallory can see yellow, orange and green. Four: each adds their own secret to the other's mixture, red to green and blue to orange, and both end up with the same brown. Unmixing paint is hard, so Mallory cannot get the brown.</desc>
+<desc id="cf-dh-d">Four steps. One: fob and car agree on a public colour, yellow. Two: each mixes in a secret colour; the fob adds red and gets orange, the car adds blue and gets green. Three: they swap the mixtures in public; the attacker can see yellow, orange and green. Four: each adds their own secret to the other's mixture, red to green and blue to orange, and both end up with the same brown. Unmixing paint is hard, so Attacker cannot get the brown.</desc>
 <text class="t b c" x="120" y="24">Key fob</text>
-<text class="t b c" x="380" y="24">Public (Mallory sees this)</text>
+<text class="t b c" x="380" y="24">Public (attacker sees this)</text>
 <text class="t b c" x="640" y="24">Car</text>
 <!-- row 1 -->
 <text class="s" x="10" y="52">1. Agree on a public colour</text>
@@ -258,7 +258,7 @@
 <path class="ln" d="M215,308 H335" marker-end="url(#cf-a)"/>
 <path class="ln" d="M675,332 H425" marker-end="url(#cf-a)"/>
 <circle cx="360" cy="316" r="13" fill="#ee8a1c"/><circle cx="400" cy="330" r="13" fill="#4aa02c"/>
-<text class="s c" x="380" y="362">Mallory sees yellow, orange, green</text>
+<text class="s c" x="380" y="362">The attacker sees yellow, orange, green</text>
 <!-- row 4 -->
 <text class="s" x="10" y="394">4. Each adds their own secret to the other's mixture</text>
 <circle cx="55" cy="440" r="18" fill="#4aa02c"/><text class="t c" x="85" y="445">+</text>
@@ -270,7 +270,7 @@
 <circle cx="380" cy="440" r="22" fill="#7a5233" stroke="var(--good)" stroke-width="3"/>
 <text class="tg c" x="380" y="486">same brown on both sides</text>
 <text class="s c" x="380" y="504">= the shared secret</text>
-<text class="tr c" x="380" y="534">Mallory cannot get to the brown: it needs a secret colour he never saw.</text>
+<text class="tr c" x="380" y="534">The attacker can't get the brown: it needs a secret colour they never saw.</text>
 <text class="s c" x="380" y="554">Unmixing paint is hard. Real DH uses maths where "unmixing" is just as hard.</text>
 </svg>
 <figcaption>{{ include.caption }}</figcaption>

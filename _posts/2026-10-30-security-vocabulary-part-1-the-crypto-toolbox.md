@@ -17,7 +17,7 @@ This is written for the second half of that room: embedded engineers who are goo
 
 **The five-line version, if you read nothing else:** a **hash** is a fingerprint of data, with no key. A **MAC** is a fingerprint that only key holders can make, like a wax seal. A **counter or challenge** inside the MAC makes it single-use. A **signature** is a seal that one party can create and everybody can check. **Encryption** hides the content, and none of the others do. Everything below is the detail, the pictures, and the ways it goes wrong.
 
-## The story: a key fob, a car and Mallory
+## The story: a key fob, a car and an attacker
 
 Every tool in this post exists because somebody did something nasty to somebody else. So instead of a list of definitions, we'll follow one story, and add one tool whenever the story hits a hole.
 
@@ -25,23 +25,23 @@ The cast:
 
 - **The key fob** sends a message by radio: `UNLOCK`.
 - **The car** (in our series, an ECU, short for electronic control unit: one of the many small computers a car is full of) receives it and opens the door, if the message is genuine.
-- **Mallory** stands in the parking lot with a laptop and a radio receiver. In security texts, this is the traditional name for the person with bad intentions.
+- **The attacker** stands in the parking lot with a laptop and a radio receiver. Security texts traditionally give this role a first name (Mallory, from "malicious"); we'll just call it the attacker.
 
-{% include crypto-fig.html fig="cast" caption="Our whole story in one picture: the fob talks, the car listens, and Mallory hears everything on the way. Every tool in this post answers one of his moves." %}
+{% include crypto-fig.html fig="cast" caption="Our whole story in one picture: the fob talks, the car listens, and the attacker hears everything on the way. Every tool in this post answers one of its moves." %}
 
-What can Mallory do? The usual assumption is *a lot*, except for breaking into the fob's chip. He can **listen** to every message, **record** them, **replay** them later, **forge** his own messages, and **change** messages on the way. That's a normal attacker model for a car, because radio and bus wiring are public places. The wiring harness that goes into a door is as public as a radio signal, it's just slower to reach.
+What can the attacker do? The usual assumption is *a lot*, except for breaking into the fob's chip. They can **listen** to every message, **record** them, **replay** them later, **forge** their own messages, and **change** messages on the way. That's a normal attacker model for a car, because radio and bus wiring are public places. The wiring harness that goes into a door is as public as a radio signal, it's just slower to reach.
 
-Here's the roadmap. Each row is one of Mallory's moves, and the tool that answers it:
+Here's the roadmap. Each row is one of the attacker's moves, and the tool that answers it:
 
-| Round | What Mallory does | What we need | The tool | Section |
+| Round | What the attacker does | What we need | The tool | Section |
 |---|---|---|---|---|
 | 0 | Nothing yet, but we need a way to talk about data | A fingerprint of data | Hash function | [Tool 1](#tool-1-the-fingerprint-hash-functions) |
-| 1 | Sends his own `UNLOCK` | Proof that the sender knows a secret | MAC (HMAC, CMAC) | [Tool 2](#tool-2-the-seal-only-key-holders-can-make-mac-hmac-cmac) |
+| 1 | Sends their own `UNLOCK` | Proof that the sender knows a secret | MAC (HMAC, CMAC) | [Tool 2](#tool-2-the-seal-only-key-holders-can-make-mac-hmac-cmac) |
 | 2 | Records a genuine `UNLOCK` and plays it later | Proof that the message is new | Counter, nonce, challenge | [Tool 3](#tool-3-is-it-new-freshness-nonces-and-randomness) |
 | 3 | Reads what's sent (a secret, a diagnostic result) | Nobody else can read it | Encryption (AES, AEAD) | [Tool 4](#tool-4-keeping-secrets-encryption) |
 | 4 | Forges *firmware*, where one maker must create and millions of cars must check | Verify without being able to forge | Signature (ECDSA, RSA) | [Tool 5](#tool-5-one-creator-many-checkers-signatures) |
 | 5 | Sits between two parties who have never met | Agree on a secret in public | Key agreement (Diffie-Hellman) and key derivation | [Tool 6](#tool-6-agreeing-on-a-secret-in-public-diffie-hellman-and-kdfs) |
-| 6 | Hands over *his own* public key and claims it's the manufacturer's | Proof that a key belongs to who it says | Certificates | [Tool 7](#tool-7-whose-key-is-this-certificates) |
+| 6 | Hands over *their own* public key and claims it's the manufacturer's | Proof that a key belongs to who it says | Certificates | [Tool 7](#tool-7-whose-key-is-this-certificates) |
 | 7 | Waits 15 years for a quantum computer | An exit plan | Post-quantum crypto, crypto agility | [Tool 8](#tool-8-the-quantum-footnote-and-the-exit-plan) |
 
 Before the tools, one more thing: the questions a message has to answer.
@@ -67,7 +67,7 @@ One more distinction that will keep coming back: **safety protects the car from 
 
 **The problem it solves:** none, yet. A hash is the ingredient inside nearly everything else, so we start here.
 
-**The picture:** a meat grinder. Put in anything, whether a steak or a whole cow, and out comes sausage. You can make sausage from meat, but you can't make meat from sausage. And the same meat always gives the same sausage.
+**The picture:** a smoothie blender. Put in anything, whether a single strawberry or a whole crate of fruit, and you always get exactly one glass of smoothie. You can make a smoothie from fruit, but you can't make fruit from a smoothie. And the same fruit in the same amounts always gives the same smoothie.
 
 A **hash function** (SHA-256, SHA-3) takes input of any size and produces a **digest**, a fixed-size fingerprint: 32 bytes for SHA-256. Always 32 bytes, whether the input is one word or six megabytes of firmware.
 
@@ -85,7 +85,7 @@ This is called the **avalanche effect**, and it's what makes a hash a good finge
 
 Second, it's **one-way** and **collision-resistant**. In plain words: from a digest you can't recover an input (**preimage resistance**), and you can't find two different inputs with the same digest (**collision resistance**). For an n-bit digest, finding a collision takes about 2^(n/2) work, which is why SHA-256 is described as "128-bit collision resistance". Old hash functions like MD5 and SHA-1 have practical collision attacks; finding one in an update path is a finding, not a style issue.
 
-**What a hash does not give you: a lock.** A hash has no key, so everybody can compute it, including Mallory. If the fingerprint travels with the data, he changes the data and computes a new fingerprint. A hash stored next to the data it protects is a tamper seal printed by the person you were worried about. It becomes useful when something protects the *hash itself*: a signature over it, a MAC, or a read-only memory location.
+**What a hash does not give you: a lock.** A hash has no key, so everybody can compute it, including the attacker. If the fingerprint travels with the data, the attacker changes the data and computes a new fingerprint. A hash stored next to the data it protects is a tamper seal printed by the person you were worried about. It becomes useful when something protects the *hash itself*: a signature over it, a MAC, or a read-only memory location.
 
 **Where it shows up in an ECU:** the fingerprint of an update block, the input of a signature (you sign the hash, not the 6 MB image), the core of HMAC and of key derivation.
 
@@ -93,13 +93,13 @@ Second, it's **one-way** and **collision-resistant**. In plain words: from a dig
 
 ## Tool 2: The seal only key holders can make (MAC, HMAC, CMAC)
 
-**The problem it solves:** Mallory sends his own `UNLOCK`. The car has no way to tell the difference.
+**The problem it solves:** the attacker sends their own `UNLOCK`. The car has no way to tell the difference.
 
-**First idea, and why it fails:** put a password into the message: `UNLOCK, password=1234`. Mallory hears the message once. From then on he knows the password. A secret that travels in the open is not a secret anymore.
+**First idea, and why it fails:** put a password into the message: `UNLOCK, password=1234`. The attacker hears the message once. From then on the attacker knows the password. A secret that travels in the open is not a secret anymore.
 
 **Better idea:** don't send the secret, send *proof that you know it*. That's a **message authentication code**, or **MAC**. The picture is a wax seal with a stamp that only you and the receiver own. The message is readable by everybody, but only someone with the stamp can make a seal that matches.
 
-{% include crypto-fig.html fig="mac" caption="A MAC is the wax seal only key holders can make. The tag is the seal. Mallory can write a message, but not a seal that matches." %}
+{% include crypto-fig.html fig="mac" caption="A MAC is the wax seal only key holders can make. The tag is the seal. The attacker can write a message, but not a seal that matches." %}
 
 ### How it works
 
@@ -184,7 +184,7 @@ c = CMAC(algorithms.AES(key)); c.update(msg)
 print(c.finalize()[:8].hex())                             # 935cb33810b4f0ac  (AES-CMAC, 8 bytes)
 ```
 
-Change `41` to `99` and the HMAC tag becomes `50c1c00cc30b763a`. That is the correct tag for `UNLOCK|99`, and nobody can compute it without the key. Mallory's only option is to guess.
+Change `41` to `99` and the HMAC tag becomes `50c1c00cc30b763a`. That is the correct tag for `UNLOCK|99`, and nobody can compute it without the key. The attacker's only option is to guess.
 
 ### How long should a tag be?
 
@@ -212,13 +212,13 @@ Better still: let the HSM do the verification, so the comparison happens inside 
 
 ## Tool 3: Is it new? (freshness, nonces and randomness)
 
-**The problem it solves:** Mallory doesn't need to forge anything. He records a genuine `UNLOCK ‖ tag` while you lock your car, and replays it when you leave. The message is authentic, it's intact, the tag is valid. And it's worthless to trust.
+**The problem it solves:** the attacker doesn't need to forge anything. They record a genuine `UNLOCK ‖ tag` while you lock your car, and replay it when you leave. The message is authentic, it's intact, the tag is valid. And it's worthless to trust.
 
 **The picture:** a cinema ticket. It's genuine, but it's valid for one seat at one show, and the usher tears it. A MAC proves *who made* a message, not *when*.
 
 There are two ways to make a message valid only once:
 
-- **A counter.** The sender includes a number that goes up with every message (`UNLOCK|41`, then `UNLOCK|42`). The number goes *into the MAC*, so Mallory can't change it. The receiver remembers the last number and rejects anything not newer. Cheap, but both sides have to keep their counters in sync, also across power cycles. (In the automotive bus world, this is the **freshness value**, covered in [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}).)
+- **A counter.** The sender includes a number that goes up with every message (`UNLOCK|41`, then `UNLOCK|42`). The number goes *into the MAC*, so the attacker can't change it. The receiver remembers the last number and rejects anything not newer. Cheap, but both sides have to keep their counters in sync, also across power cycles. (In the automotive bus world, this is the **freshness value**, covered in [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}).)
 - **A challenge.** The receiver asks a fresh question each time, and the sender's answer depends on it. Nothing to synchronize, but it needs a round trip. This is also called **challenge-response**, and it's the picture of a secret handshake where the other side asks for a different secret gesture every time.
 
 <div class="mermaid">
@@ -270,7 +270,7 @@ The classic embedded failure: a PRNG seeded with the same value after every rese
 
 ## Tool 4: Keeping secrets (encryption)
 
-**The problem it solves:** Mallory reads what's sent. A MAC doesn't help: it protects against changes, not against eyes.
+**The problem it solves:** the attacker reads what's sent. A MAC doesn't help: it protects against changes, not against eyes.
 
 **The picture:** radio is a postcard, anybody on the way can read it. Encryption is the sealed envelope with a lock.
 
@@ -293,8 +293,8 @@ ECB encrypts every 16-byte block on its own, so a big flat blue area becomes a b
 |---|---|---|
 | **ECB** | Every block on its own | Patterns survive, as the padlock shows. Never use it. |
 | **CBC** | Each block is mixed with the previous encrypted block first; needs an **IV** and padding | The IV must be unpredictable. No integrity: flipped bits in the ciphertext flip bits in the next plaintext block. Padding errors have a long history of leaking data. |
-| **CTR** | AES scrambles a counter, the output is XORed onto the data (a stream cipher) | A (key, nonce) pair must **never** repeat. Twice gives Mallory the XOR of both plaintexts, and that's often enough. |
-| **GCM** | CTR plus a built-in MAC (GMAC), in one operation | Nonce reuse here is worse: it leaks the authentication key, so he can forge messages too. |
+| **CTR** | AES scrambles a counter, the output is XORed onto the data (a stream cipher) | A (key, nonce) pair must **never** repeat. Twice gives the attacker the XOR of both plaintexts, and that's often enough. |
+| **GCM** | CTR plus a built-in MAC (GMAC), in one operation | Nonce reuse here is worse: it leaks the authentication key, so the attacker can forge messages too. |
 
 **AEAD** (authenticated encryption with associated data, for example AES-GCM) encrypts and authenticates in one call. The "associated data" is a header that stays readable but is covered by the tag. Use an AEAD whenever you need confidentiality. The general rule: **encryption without authentication is one flipped bit away from disaster**, because a ciphertext can be modified in ways that change the plaintext predictably.
 
@@ -360,23 +360,23 @@ Signing is a secret-key operation, so the signing key lives in a data-center HSM
 
 ## Tool 6: Agreeing on a secret in public (Diffie-Hellman and KDFs)
 
-**The problem it solves:** two parties who have never met want a shared symmetric key (for fast AES or CMAC), and Mallory hears everything they say. How do you agree on a secret in public? It sounds impossible. It isn't.
+**The problem it solves:** two parties who have never met want a shared symmetric key (for fast AES or CMAC), and the attacker hears everything they say. How do you agree on a secret in public? It sounds impossible. It isn't.
 
-**The picture:** mixing paint. Fob and car publicly agree on a color, yellow. Each secretly picks their own color: the fob red, the car blue. Each mixes their secret into the yellow and sends the mixture across: orange and green. Mallory sees both mixtures. Then each adds their own secret to the *received* mixture: the fob adds red to green, the car adds blue to orange. Both end up with the same brown. Mallory can't make it: he'd need to unmix paint to get at a secret color, and unmixing is hard.
+**The picture:** mixing paint. Fob and car publicly agree on a color, yellow. Each secretly picks their own color: the fob red, the car blue. Each mixes their secret into the yellow and sends the mixture across: orange and green. The attacker sees both mixtures. Then each adds their own secret to the *received* mixture: the fob adds red to green, the car adds blue to orange. Both end up with the same brown. The attacker can't make it: they'd need to unmix paint to get at a secret color, and unmixing is hard.
 
-{% include crypto-fig.html fig="dh" caption="Diffie-Hellman with paint: both sides end up with the same colour, and the eavesdropper only ever sees colours he cannot unmix." %}
+{% include crypto-fig.html fig="dh" caption="Diffie-Hellman with paint: both sides end up with the same colour, and the eavesdropper only ever sees colours it cannot unmix." %}
 
 The real thing, **Diffie-Hellman** (in its elliptic-curve form, **ECDH**), replaces paint with a piece of mathematics where "unmixing" is just as hard. Two things to know:
 
 - **Ephemeral keys** (a fresh pair per session) give **forward secrecy**: if a long-term key leaks tomorrow, yesterday's recorded sessions stay unreadable.
-- Plain DH has one hole. Mallory can sit in the middle, do one DH with the fob and another with the car, and relay everything in between, reading it all. This is a **man-in-the-middle (MITM)** attack. To stop it, a real handshake like **TLS** also proves who's on the other end, with certificates and signatures (Tool 7).
+- Plain DH has one hole. The attacker can sit in the middle, do one DH with the fob and another with the car, and relay everything in between, reading it all. This is a **man-in-the-middle (MITM)** attack. To stop it, a real handshake like **TLS** also proves who's on the other end, with certificates and signatures (Tool 7).
 
 ### From one secret to many keys: the KDF
 
 The result of DH is one shared secret, but you need several keys (one for encryption, one for MACs, maybe separate ones per direction). A **key derivation function (KDF)**, like HKDF, turns one secret plus some context into as many independent keys as you want. You'll meet it in two places:
 
 - **Session keys:** a DH secret goes through a KDF to produce the actual encryption and MAC keys of a connection.
-- **Key diversification:** a **master key** plus the ECU's serial number goes in, a **per-ECU key** comes out. The master stays in the backend, the ECU gets only its derived key, and an extracted ECU key tells Mallory nothing about the key of the next ECU. This is how "no secret is shared across the fleet" works in practice, and Part 2 comes back to it.
+- **Key diversification:** a **master key** plus the ECU's serial number goes in, a **per-ECU key** comes out. The master stays in the backend, the ECU gets only its derived key, and an extracted ECU key tells the attacker nothing about the key of the next ECU. This is how "no secret is shared across the fleet" works in practice, and Part 2 comes back to it.
 
 A **salt** is a non-secret value (unique or random) mixed into a KDF or a hash, so the same inputs don't produce the same outputs everywhere.
 
@@ -384,7 +384,7 @@ A **salt** is a non-secret value (unique or random) mixed into a KDF or a hash, 
 
 ## Tool 7: Whose key is this? (certificates)
 
-**The problem it solves:** Tool 5 works only if the car holds the *real* public key of the manufacturer. What if Mallory hands the car his own public key and says "this is the manufacturer's"? Then his signatures verify perfectly. A public key on its own says nothing about who owns it.
+**The problem it solves:** Tool 5 works only if the car holds the *real* public key of the manufacturer. What if the attacker hands the car their own public key and says "this is the manufacturer's"? Then their signatures verify perfectly. A public key on its own says nothing about who owns it.
 
 **The picture:** a passport. It contains your name, your photo (the public key), and a stamp from an authority that the border officer already trusts. The officer doesn't know you, but knows the country's stamp is hard to fake.
 
@@ -412,7 +412,7 @@ Verifying a certificate means checking every signature in the chain up to the tr
 
 ## Tool 8: The quantum footnote, and the exit plan
 
-**The problem it solves:** Mallory is patient. A BCU built today lives 15 to 20 years. A large enough quantum computer would break RSA and ECC (Shor's algorithm), which means *every signature and every key agreement in this post*. Nobody knows when such a machine exists, but "within the lifetime of a car we ship today" is a planning assumption, not science fiction.
+**The problem it solves:** the attacker is patient. A BCU built today lives 15 to 20 years. A large enough quantum computer would break RSA and ECC (Shor's algorithm), which means *every signature and every key agreement in this post*. Nobody knows when such a machine exists, but "within the lifetime of a car we ship today" is a planning assumption, not science fiction.
 
 Symmetric crypto is much less affected. Grover's algorithm gives a quantum computer a quadratic speed-up on brute-force search, which is why 256-bit keys are the comfortable choice for long-lived products.
 
@@ -464,7 +464,7 @@ The consequence: **a CRC is a safety mechanism, a MAC or signature is a security
 
 ## Closing
 
-Most of security vocabulary is three questions in different clothing: *who made this* (authenticity), *was it changed* (integrity), and *is it new* (freshness). Add "who can read it" (confidentiality) and "who can break it for everybody at once" (key management), and you've covered most of what the words in this post do. Mallory's moves in the story map one-to-one onto the tools, and no tool solves two of them. That's why real designs use five or six of them at once, and why "we added crypto" is never a complete sentence.
+Most of security vocabulary is three questions in different clothing: *who made this* (authenticity), *was it changed* (integrity), and *is it new* (freshness). Add "who can read it" (confidentiality) and "who can break it for everybody at once" (key management), and you've covered most of what the words in this post do. The attacker's moves in the story map one-to-one onto the tools, and no tool solves two of them. That's why real designs use five or six of them at once, and why "we added crypto" is never a complete sentence.
 
 What this post didn't cover is everything around the crypto: where the keys live in an ECU, what the HSM is, how boot and update use all of this, what the bus and the diagnostic services look like, which attacks go around the crypto instead of through it, and what the process looks like. That's [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}).
 
