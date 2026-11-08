@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="350" viewBox="0 0 900 350" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">
+<title>Task and ISR timeline from a QEMU run: a 10 ms interrupt lock</title>
+<desc>Timeline of ISRs and threads from a QEMU run. A task holds an interrupt lock for 10 ms; during that time the SysTick interrupt does not run and one thread occupies the CPU in a single slice.</desc>
+<rect width="900" height="350" fill="#ffffff"/>
+<text x="120" y="22" font-size="14" font-weight="600" fill="#1f2328">Lock fault: one task blocks interrupts for 10 ms, SysTick cannot run</text>
+<text x="120" y="40" fill="#59636e">QEMU run, virtual time in ms, 1996 to 2013 (grid every 2 ms)</text>
+<rect x="0" y="76" width="900" height="26" fill="#f6f8fa"/>
+<text x="112" y="93" text-anchor="end" fill="#1f2328">SysTick</text>
+<text x="112" y="119" text-anchor="end" fill="#1f2328">HwCounter</text>
+<rect x="0" y="128" width="900" height="26" fill="#f6f8fa"/>
+<text x="112" y="145" text-anchor="end" fill="#1f2328">Timer thread</text>
+<text x="112" y="171" text-anchor="end" fill="#1f2328">TpWatchdog</text>
+<rect x="0" y="180" width="900" height="26" fill="#f6f8fa"/>
+<text x="112" y="197" text-anchor="end" fill="#1f2328">Task10ms</text>
+<text x="112" y="223" text-anchor="end" fill="#1f2328">Task100ms</text>
+<rect x="0" y="232" width="900" height="26" fill="#f6f8fa"/>
+<text x="112" y="249" text-anchor="end" fill="#1f2328">BswTask</text>
+<text x="112" y="275" text-anchor="end" fill="#1f2328">CalibServer</text>
+<line x1="120.0" y1="76" x2="120.0" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="120.0" y="300" text-anchor="middle" fill="#59636e">1996</text>
+<line x1="209.4" y1="76" x2="209.4" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="209.4" y="300" text-anchor="middle" fill="#59636e">1998</text>
+<line x1="298.8" y1="76" x2="298.8" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="298.8" y="300" text-anchor="middle" fill="#59636e">2000</text>
+<line x1="388.2" y1="76" x2="388.2" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="388.2" y="300" text-anchor="middle" fill="#59636e">2002</text>
+<line x1="477.6" y1="76" x2="477.6" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="477.6" y="300" text-anchor="middle" fill="#59636e">2004</text>
+<line x1="567.1" y1="76" x2="567.1" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="567.1" y="300" text-anchor="middle" fill="#59636e">2006</text>
+<line x1="656.5" y1="76" x2="656.5" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="656.5" y="300" text-anchor="middle" fill="#59636e">2008</text>
+<line x1="745.9" y1="76" x2="745.9" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="745.9" y="300" text-anchor="middle" fill="#59636e">2010</text>
+<line x1="835.3" y1="76" x2="835.3" y2="284" stroke="#d0d7de" stroke-width="1"/>
+<text x="835.3" y="300" text-anchor="middle" fill="#59636e">2012</text>
+<rect x="134.8" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="135.2" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="159.7" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="179.5" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="179.9" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="204.4" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="224.2" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="224.6" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="225.5" y="236" width="8.2" height="18" fill="#0969da" rx="2"/>
+<rect x="233.9" y="210" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="249.1" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="268.9" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="269.3" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="270.7" y="158" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="271.2" y="184" width="1.6" height="18" fill="#0969da" rx="2"/>
+<rect x="272.9" y="262" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="273.5" y="184" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="274.2" y="262" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="274.8" y="184" width="5.3" height="18" fill="#0969da" rx="2"/>
+<rect x="280.2" y="210" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="281.1" y="262" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="735.6" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="736.0" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="281.7" y="210" width="455.5" height="18" fill="#cf222e" rx="2"/>
+<rect x="737.3" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="738.9" y="210" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="740.9" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="741.6" y="210" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="760.7" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="761.1" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="785.5" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="805.4" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="805.8" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="830.2" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="850.1" y="80" width="1.5" height="18" fill="#8250df" rx="2"/>
+<rect x="850.5" y="132" width="1.5" height="18" fill="#59636e" rx="2"/>
+<rect x="851.3" y="236" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="852.1" y="184" width="1.5" height="18" fill="#0969da" rx="2"/>
+<rect x="874.9" y="106" width="1.5" height="18" fill="#8250df" rx="2"/>
+<line x1="288.4" y1="68" x2="288.4" y2="284" stroke="#bf8700" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="294.4" y="62" fill="#9a6700" font-weight="600">FLT marker: interrupt lock of 10 ms (budget: 500 us)</text>
+<text x="514.8" y="93" text-anchor="middle" fill="#cf222e">no SysTick for 10 ms</text>
+<text x="514.8" y="223" text-anchor="middle" fill="#ffffff" font-weight="600">Task100ms: one 10.2 ms slice</text>
+<rect x="120" y="320" width="12" height="12" fill="#8250df" rx="2"/><text x="138" y="330" fill="#1f2328">ISR (category 2)</text>
+<rect x="260" y="320" width="12" height="12" fill="#59636e" rx="2"/><text x="278" y="330" fill="#1f2328">system thread</text>
+<rect x="390" y="320" width="12" height="12" fill="#0969da" rx="2"/><text x="408" y="330" fill="#1f2328">application thread</text>
+<rect x="550" y="320" width="12" height="12" fill="#cf222e" rx="2"/><text x="568" y="330" fill="#1f2328">the culprit</text>
+</svg>

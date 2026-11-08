@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ardl" width="760" height="414" viewBox="0 0 760 414"><title>LightCtrl: ports and runnables</title><style>
+.ardl{font-family:var(--ardl-font,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif);font-size:12px}
+.ardl .bg{fill:var(--ardl-bg,#ffffff)}
+.ardl text{fill:var(--ardl-fg,#1f2328)}
+.ardl text.name{font-weight:600;font-size:13px}
+.ardl text.title{font-weight:600;font-size:15px}
+.ardl text.stereo,.ardl text.muted{fill:var(--ardl-muted,#59636e);font-size:11px}
+.ardl text.band-label{fill:var(--ardl-muted,#59636e);font-size:12px;font-weight:600}
+.ardl .box{stroke-width:1.2}
+.ardl .composition{fill:var(--ardl-composition,#f6f8fa);stroke:var(--ardl-composition-stroke,#8c959f);stroke-dasharray:6 3;stroke-width:1.2}
+.ardl .kind-application{fill:var(--ardl-app,#e7f0fd);stroke:var(--ardl-app-stroke,#3b6fb6)}
+.ardl .kind-sensorActuator{fill:var(--ardl-sa,#e3f5f3);stroke:var(--ardl-sa-stroke,#1f7a70)}
+.ardl .kind-service{fill:var(--ardl-svc,#f1e9fb);stroke:var(--ardl-svc-stroke,#7b4bb7)}
+.ardl .kind-ecuAbstraction,.ardl .kind-complexDriver{fill:var(--ardl-cdd,#fff4d6);stroke:var(--ardl-cdd-stroke,#b7791f)}
+.ardl .kind-parameter{fill:var(--ardl-prm,#f0f1f3);stroke:var(--ardl-prm-stroke,#6e7781)}
+.ardl .kind-composition{fill:var(--ardl-composition,#f6f8fa);stroke:var(--ardl-composition-stroke,#8c959f)}
+.ardl .layer-services{fill:var(--ardl-svc,#f1e9fb);stroke:var(--ardl-svc-stroke,#7b4bb7)}
+.ardl .layer-ecual{fill:var(--ardl-ecual,#e5f5e9);stroke:var(--ardl-ecual-stroke,#2f8a4a)}
+.ardl .layer-mcal{fill:var(--ardl-mcal,#fde9e7);stroke:var(--ardl-mcal-stroke,#c0392b)}
+.ardl .layer-cdd{fill:var(--ardl-cdd,#fff4d6);stroke:var(--ardl-cdd-stroke,#b7791f)}
+.ardl .band{stroke:none;opacity:.45}
+.ardl .band-rte{fill:var(--ardl-rte,#ffe3c7);stroke:none}
+.ardl .runnable{fill:var(--ardl-runnable,#ffffff);stroke:var(--ardl-runnable-stroke,#57606a);stroke-width:1}
+.ardl .port-box{fill:var(--ardl-bg,#ffffff);stroke:var(--ardl-port-stroke,#1f2328);stroke-width:1}
+.ardl .glyph{stroke:none}
+.ardl .glyph-hollow{fill:none;stroke-width:1.4}
+.ardl .k-sr .glyph{fill:var(--ardl-sr,#2f6fd0)} .ardl .k-sr .glyph-hollow{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .k-cs .glyph{fill:var(--ardl-cs,#c26a00)} .ardl .k-cs .glyph-hollow{stroke:var(--ardl-cs,#c26a00)}
+.ardl .k-mode .glyph{fill:var(--ardl-mode,#8a3fc7)} .ardl .k-mode .glyph-hollow{stroke:var(--ardl-mode,#8a3fc7)}
+.ardl .k-nv .glyph{fill:var(--ardl-nv,#1f8a4c)}
+.ardl .k-param .glyph{fill:var(--ardl-param,#6e7781)}
+.ardl .edge{fill:none;stroke-width:1.4;stroke:var(--ardl-edge,#57606a)}
+.ardl .edge.k-sr{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .edge.k-cs{stroke:var(--ardl-cs,#c26a00);stroke-dasharray:6 3}
+.ardl .edge.k-mode{stroke:var(--ardl-mode,#8a3fc7);stroke-dasharray:2 3}
+.ardl .edge.k-nv{stroke:var(--ardl-nv,#1f8a4c)}
+.ardl .edge.k-param{stroke:var(--ardl-param,#6e7781)}
+.ardl .edge.upward{stroke:var(--ardl-error,#cf222e);stroke-dasharray:5 3}
+.ardl .edge-group:hover .edge{stroke-width:2.6}
+.ardl .arrow{stroke:none;fill:var(--ardl-edge,#57606a)}
+.ardl .arrow.k-sr{fill:var(--ardl-sr,#2f6fd0)}
+.ardl .arrow.k-cs{fill:var(--ardl-cs,#c26a00)}
+.ardl .arrow.k-mode{fill:var(--ardl-mode,#8a3fc7)}
+.ardl .arrow.k-nv{fill:var(--ardl-nv,#1f8a4c)}
+.ardl .arrow.k-param{fill:var(--ardl-param,#6e7781)}
+.ardl .arrow.upward{fill:var(--ardl-error,#cf222e)}
+.ardl .os-task{fill:var(--ardl-app,#e7f0fd);stroke:var(--ardl-app-stroke,#3b6fb6)}
+.ardl .os-isr{fill:var(--ardl-mcal,#fde9e7);stroke:var(--ardl-mcal-stroke,#c0392b)}
+.ardl .os-divider{stroke:var(--ardl-app-stroke,#3b6fb6);stroke-width:.8;opacity:.5}
+.ardl text.runs{font-size:11px;font-family:var(--ardl-mono,ui-monospace,Menlo,Consolas,monospace)}
+.ardl .os-object{fill:var(--ardl-bg,#ffffff);stroke-width:1.4}
+.ardl .os-slot{stroke:var(--ardl-sr,#2f6fd0);stroke-width:1}
+.ardl .os-object.os-mutex,.ardl .edge.os-mutex{stroke:var(--ardl-cs,#c26a00)}
+.ardl .os-object.os-semaphore,.ardl .edge.os-semaphore{stroke:var(--ardl-mode,#8a3fc7)}
+.ardl .os-object.os-queue,.ardl .edge.os-queue{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .os-object.os-event,.ardl .edge.os-event{stroke:var(--ardl-nv,#1f8a4c)}
+.ardl .edge.os-mutex{stroke-dasharray:6 3}
+.ardl .arrow.os-semaphore{fill:var(--ardl-mode,#8a3fc7)}
+.ardl .arrow.os-queue{fill:var(--ardl-sr,#2f6fd0)}
+.ardl .arrow.os-event{fill:var(--ardl-nv,#1f8a4c)}
+</style><rect class="bg" x="0" y="0" width="760" height="414"/><text x="16" y="26" class="title" text-anchor="start">LightCtrl: ports and runnables</text><rect x="22" y="44" width="347" height="322" rx="4" class="box kind-application"/><text x="195.5" y="62" class="stereo" text-anchor="middle">«application»</text><text x="195.5" y="79" class="name" text-anchor="middle">LightCtrl</text><g class="node"><title>runnable R_Init: on init</title><rect x="184" y="213" width="75" height="40" rx="12" class="runnable"/><text x="221.5" y="230" class="name" text-anchor="middle">R_Init</text><text x="221.5" y="245" class="muted" text-anchor="middle">on init</text></g><g class="node"><title>runnable R_Control: every 10ms</title><rect x="184" y="148" width="99" height="40" rx="12" class="runnable"/><text x="233.5" y="165" class="name" text-anchor="middle">R_Control</text><text x="233.5" y="180" class="muted" text-anchor="middle">every 10ms</text></g><g class="node"><title>runnable R_Mode: on mode</title><rect x="184" y="294.3" width="75" height="40" rx="12" class="runnable"/><text x="221.5" y="311.3" class="name" text-anchor="middle">R_Mode</text><text x="221.5" y="326.3" class="muted" text-anchor="middle">on mode</text></g><g class="edge-group"><title>R_Init calls RpCalib</title><path d="M28 258 L184 258" class="edge k-cs"/><path d="M28 258 L36 254 L36 262 Z" class="arrow k-cs"/></g><g class="edge-group"><title>R_Control reads RpSpeed</title><path d="M28 150 L174 150 L174 189.5 L184 189.5" class="edge k-sr"/><path d="M184 189.5 L176 193.5 L176 185.5 Z" class="arrow k-sr"/></g><g class="edge-group"><title>R_Control reads RpOutsideTemp</title><path d="M28 186 L184 186" class="edge k-sr"/><path d="M184 186 L176 190 L176 182 Z" class="arrow k-sr"/></g><g class="edge-group"><title>R_Control reads RpParams</title><path d="M28 222 L164 222 L164 182.5 L184 182.5" class="edge k-param"/><path d="M184 182.5 L176 186.5 L176 178.5 Z" class="arrow k-param"/></g><g class="edge-group"><title>R_Control writes PpLamp</title><path d="M283 193 L363 193" class="edge k-sr"/><path d="M363 193 L355 197 L355 189 Z" class="arrow k-sr"/></g><g class="edge-group"><title>R_Mode mode RpPowerMode</title><path d="M28 294 L164 294 L164 334.7 L184 334.7" class="edge k-mode"/><path d="M184 334.7 L176 338.7 L176 330.7 Z" class="arrow k-mode"/></g><g class="edge-group"><title>R_Mode calls RpNvM</title><path d="M28 330 L184 330" class="edge k-cs"/><path d="M28 330 L36 326 L36 334 Z" class="arrow k-cs"/></g><g class="port k-sr"><title>rport RpSpeed : Speed (sr)</title><rect x="16" y="144" width="12" height="12" class="port-box"/><path d="M19 146.5 L25.5 150 L19 153.5 Z" class="glyph"/></g><text x="33" y="141" class="muted" text-anchor="start">RpSpeed</text><g class="port k-sr"><title>rport RpOutsideTemp : OutsideTemp (sr)</title><rect x="16" y="180" width="12" height="12" class="port-box"/><path d="M19 182.5 L25.5 186 L19 189.5 Z" class="glyph"/></g><text x="33" y="177" class="muted" text-anchor="start">RpOutsideTemp</text><g class="port k-mode"><title>rport RpPowerMode : PowerMode (mode)</title><rect x="16" y="288" width="12" height="12" class="port-box"/><path d="M22 290.5 L25.5 294 L22 297.5 L18.5 294 Z" class="glyph-hollow"/></g><text x="33" y="285" class="muted" text-anchor="start">RpPowerMode</text><g class="port k-cs"><title>rport RpCalib : Calib (cs)</title><rect x="16" y="252" width="12" height="12" class="port-box"/><circle cx="22" cy="258" r="3.2" class="glyph-hollow"/></g><text x="33" y="249" class="muted" text-anchor="start">RpCalib</text><g class="port k-cs"><title>rport RpNvM : NvM_Service (cs)</title><rect x="16" y="324" width="12" height="12" class="port-box"/><circle cx="22" cy="330" r="3.2" class="glyph-hollow"/></g><text x="33" y="321" class="muted" text-anchor="start">RpNvM</text><g class="port k-param"><title>rport RpParams : LightParams (param)</title><rect x="16" y="216" width="12" height="12" class="port-box"/><path d="M19 218.5 L25.5 222 L19 225.5 Z" class="glyph"/></g><text x="33" y="213" class="muted" text-anchor="start">RpParams</text><g class="port k-sr"><title>pport PpLamp : LampState (sr)</title><rect x="363" y="187" width="12" height="12" class="port-box"/><path d="M366 189.5 L372.5 193 L366 196.5 Z" class="glyph"/></g><text x="358" y="184" class="muted" text-anchor="end">PpLamp</text><g class="legend"><g class="port k-sr"><title>Sender (sr pport)</title><rect x="16" y="386" width="12" height="12" class="port-box"/><path d="M19 388.5 L25.5 392 L19 395.5 Z" class="glyph"/></g><text x="33" y="396" class="muted" text-anchor="start">Sender</text><g class="port k-sr"><title>Receiver (sr rport)</title><rect x="91" y="386" width="12" height="12" class="port-box"/><path d="M94 388.5 L100.5 392 L94 395.5 Z" class="glyph"/></g><text x="108" y="396" class="muted" text-anchor="start">Receiver</text><g class="port k-cs"><title>Server (cs pport)</title><rect x="179" y="386" width="12" height="12" class="port-box"/><circle cx="185" cy="392" r="3.2" class="glyph"/></g><text x="196" y="396" class="muted" text-anchor="start">Server</text><g class="port k-cs"><title>Client (cs rport)</title><rect x="254" y="386" width="12" height="12" class="port-box"/><circle cx="260" cy="392" r="3.2" class="glyph-hollow"/></g><text x="271" y="396" class="muted" text-anchor="start">Client</text><g class="port k-mode"><title>Mode manager (mode pport)</title><rect x="329" y="386" width="12" height="12" class="port-box"/><path d="M335 388.5 L338.5 392 L335 395.5 L331.5 392 Z" class="glyph"/></g><text x="346" y="396" class="muted" text-anchor="start">Mode manager</text><g class="port k-mode"><title>Mode user (mode rport)</title><rect x="444" y="386" width="12" height="12" class="port-box"/><path d="M450 388.5 L453.5 392 L450 395.5 L446.5 392 Z" class="glyph-hollow"/></g><text x="461" y="396" class="muted" text-anchor="start">Mode user</text><g class="port k-nv"><title>NV data (nv pport)</title><rect x="539" y="386" width="12" height="12" class="port-box"/><path d="M542 388.5 L548.5 392 L542 395.5 Z" class="glyph"/></g><text x="556" y="396" class="muted" text-anchor="start">NV data</text><g class="port k-param"><title>Parameter (param rport)</title><rect x="621" y="386" width="12" height="12" class="port-box"/><path d="M624 388.5 L630.5 392 L624 395.5 Z" class="glyph"/></g><text x="638" y="396" class="muted" text-anchor="start">Parameter</text></g></svg>

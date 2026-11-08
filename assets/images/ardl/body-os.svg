@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ardl" width="1021" height="371" viewBox="0 0 1021 371"><title>Body OS: tasks and resources</title><style>
+.ardl{font-family:var(--ardl-font,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif);font-size:12px}
+.ardl .bg{fill:var(--ardl-bg,#ffffff)}
+.ardl text{fill:var(--ardl-fg,#1f2328)}
+.ardl text.name{font-weight:600;font-size:13px}
+.ardl text.title{font-weight:600;font-size:15px}
+.ardl text.stereo,.ardl text.muted{fill:var(--ardl-muted,#59636e);font-size:11px}
+.ardl text.band-label{fill:var(--ardl-muted,#59636e);font-size:12px;font-weight:600}
+.ardl .box{stroke-width:1.2}
+.ardl .composition{fill:var(--ardl-composition,#f6f8fa);stroke:var(--ardl-composition-stroke,#8c959f);stroke-dasharray:6 3;stroke-width:1.2}
+.ardl .kind-application{fill:var(--ardl-app,#e7f0fd);stroke:var(--ardl-app-stroke,#3b6fb6)}
+.ardl .kind-sensorActuator{fill:var(--ardl-sa,#e3f5f3);stroke:var(--ardl-sa-stroke,#1f7a70)}
+.ardl .kind-service{fill:var(--ardl-svc,#f1e9fb);stroke:var(--ardl-svc-stroke,#7b4bb7)}
+.ardl .kind-ecuAbstraction,.ardl .kind-complexDriver{fill:var(--ardl-cdd,#fff4d6);stroke:var(--ardl-cdd-stroke,#b7791f)}
+.ardl .kind-parameter{fill:var(--ardl-prm,#f0f1f3);stroke:var(--ardl-prm-stroke,#6e7781)}
+.ardl .kind-composition{fill:var(--ardl-composition,#f6f8fa);stroke:var(--ardl-composition-stroke,#8c959f)}
+.ardl .layer-services{fill:var(--ardl-svc,#f1e9fb);stroke:var(--ardl-svc-stroke,#7b4bb7)}
+.ardl .layer-ecual{fill:var(--ardl-ecual,#e5f5e9);stroke:var(--ardl-ecual-stroke,#2f8a4a)}
+.ardl .layer-mcal{fill:var(--ardl-mcal,#fde9e7);stroke:var(--ardl-mcal-stroke,#c0392b)}
+.ardl .layer-cdd{fill:var(--ardl-cdd,#fff4d6);stroke:var(--ardl-cdd-stroke,#b7791f)}
+.ardl .band{stroke:none;opacity:.45}
+.ardl .band-rte{fill:var(--ardl-rte,#ffe3c7);stroke:none}
+.ardl .runnable{fill:var(--ardl-runnable,#ffffff);stroke:var(--ardl-runnable-stroke,#57606a);stroke-width:1}
+.ardl .port-box{fill:var(--ardl-bg,#ffffff);stroke:var(--ardl-port-stroke,#1f2328);stroke-width:1}
+.ardl .glyph{stroke:none}
+.ardl .glyph-hollow{fill:none;stroke-width:1.4}
+.ardl .k-sr .glyph{fill:var(--ardl-sr,#2f6fd0)} .ardl .k-sr .glyph-hollow{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .k-cs .glyph{fill:var(--ardl-cs,#c26a00)} .ardl .k-cs .glyph-hollow{stroke:var(--ardl-cs,#c26a00)}
+.ardl .k-mode .glyph{fill:var(--ardl-mode,#8a3fc7)} .ardl .k-mode .glyph-hollow{stroke:var(--ardl-mode,#8a3fc7)}
+.ardl .k-nv .glyph{fill:var(--ardl-nv,#1f8a4c)}
+.ardl .k-param .glyph{fill:var(--ardl-param,#6e7781)}
+.ardl .edge{fill:none;stroke-width:1.4;stroke:var(--ardl-edge,#57606a)}
+.ardl .edge.k-sr{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .edge.k-cs{stroke:var(--ardl-cs,#c26a00);stroke-dasharray:6 3}
+.ardl .edge.k-mode{stroke:var(--ardl-mode,#8a3fc7);stroke-dasharray:2 3}
+.ardl .edge.k-nv{stroke:var(--ardl-nv,#1f8a4c)}
+.ardl .edge.k-param{stroke:var(--ardl-param,#6e7781)}
+.ardl .edge.upward{stroke:var(--ardl-error,#cf222e);stroke-dasharray:5 3}
+.ardl .edge-group:hover .edge{stroke-width:2.6}
+.ardl .arrow{stroke:none;fill:var(--ardl-edge,#57606a)}
+.ardl .arrow.k-sr{fill:var(--ardl-sr,#2f6fd0)}
+.ardl .arrow.k-cs{fill:var(--ardl-cs,#c26a00)}
+.ardl .arrow.k-mode{fill:var(--ardl-mode,#8a3fc7)}
+.ardl .arrow.k-nv{fill:var(--ardl-nv,#1f8a4c)}
+.ardl .arrow.k-param{fill:var(--ardl-param,#6e7781)}
+.ardl .arrow.upward{fill:var(--ardl-error,#cf222e)}
+.ardl .os-task{fill:var(--ardl-app,#e7f0fd);stroke:var(--ardl-app-stroke,#3b6fb6)}
+.ardl .os-isr{fill:var(--ardl-mcal,#fde9e7);stroke:var(--ardl-mcal-stroke,#c0392b)}
+.ardl .os-divider{stroke:var(--ardl-app-stroke,#3b6fb6);stroke-width:.8;opacity:.5}
+.ardl text.runs{font-size:11px;font-family:var(--ardl-mono,ui-monospace,Menlo,Consolas,monospace)}
+.ardl .os-object{fill:var(--ardl-bg,#ffffff);stroke-width:1.4}
+.ardl .os-slot{stroke:var(--ardl-sr,#2f6fd0);stroke-width:1}
+.ardl .os-object.os-mutex,.ardl .edge.os-mutex{stroke:var(--ardl-cs,#c26a00)}
+.ardl .os-object.os-semaphore,.ardl .edge.os-semaphore{stroke:var(--ardl-mode,#8a3fc7)}
+.ardl .os-object.os-queue,.ardl .edge.os-queue{stroke:var(--ardl-sr,#2f6fd0)}
+.ardl .os-object.os-event,.ardl .edge.os-event{stroke:var(--ardl-nv,#1f8a4c)}
+.ardl .edge.os-mutex{stroke-dasharray:6 3}
+.ardl .arrow.os-semaphore{fill:var(--ardl-mode,#8a3fc7)}
+.ardl .arrow.os-queue{fill:var(--ardl-sr,#2f6fd0)}
+.ardl .arrow.os-event{fill:var(--ardl-nv,#1f8a4c)}
+</style><rect class="bg" x="0" y="0" width="1021" height="371"/><text x="16" y="26" class="title" text-anchor="start">Body OS: tasks and resources</text><g class="node"><title>task Task_Init
+LightCtrl.R_Init</title><rect x="16" y="44" width="156" height="61" rx="4" class="box os-task"/><text x="26" y="61" class="name" text-anchor="start">Task_Init</text><text x="26" y="76" class="muted" text-anchor="start">prio 30 · on startup</text><line x1="16" y1="84" x2="172" y2="84" class="os-divider"/><text x="26" y="98" class="runs" text-anchor="start">LightCtrl.R_Init</text></g><g class="node"><title>task Task_5ms
+WheelSensor.R_Sample
+SpeedCalc.R_Calc</title><rect x="558" y="44" width="156" height="76" rx="4" class="box os-task"/><text x="568" y="61" class="name" text-anchor="start">Task_5ms</text><text x="568" y="76" class="muted" text-anchor="start">prio 20 · every 5ms</text><line x1="558" y1="84" x2="714" y2="84" class="os-divider"/><text x="568" y="98" class="runs" text-anchor="start">WheelSensor.R_Sample</text><text x="568" y="113" class="runs" text-anchor="start">SpeedCalc.R_Calc</text></g><g class="node"><title>task Task_10ms
+LightCtrl.R_Control
+ModeManager.R_Main
+NvM.NvM_MainFunction</title><rect x="367" y="141" width="156" height="91" rx="4" class="box os-task"/><text x="377" y="158" class="name" text-anchor="start">Task_10ms</text><text x="377" y="173" class="muted" text-anchor="start">prio 10 · every 10ms</text><line x1="367" y1="181" x2="523" y2="181" class="os-divider"/><text x="377" y="195" class="runs" text-anchor="start">LightCtrl.R_Control</text><text x="377" y="210" class="runs" text-anchor="start">ModeManager.R_Main</text><text x="377" y="225" class="runs" text-anchor="start">NvM.NvM_MainFunction</text></g><g class="node"><title>task Task_Lamp
+LampDriver.R_Drive</title><rect x="862" y="140" width="143" height="61" rx="4" class="box os-task"/><text x="872" y="157" class="name" text-anchor="start">Task_Lamp</text><text x="872" y="172" class="muted" text-anchor="start">prio 15</text><line x1="862" y1="180" x2="1005" y2="180" class="os-divider"/><text x="872" y="194" class="runs" text-anchor="start">LampDriver.R_Drive</text></g><g class="node"><title>task Task_Mode
+LightCtrl.R_Mode</title><rect x="380" y="260" width="130" height="61" rx="4" class="box os-task"/><text x="390" y="277" class="name" text-anchor="start">Task_Mode</text><text x="390" y="292" class="muted" text-anchor="start">prio 12</text><line x1="380" y1="300" x2="510" y2="300" class="os-divider"/><text x="390" y="314" class="runs" text-anchor="start">LightCtrl.R_Mode</text></g><g class="node"><title>isr AdcIsr</title><rect x="192" y="62" width="120" height="40" rx="4" class="box os-isr"/><text x="202" y="79" class="name" text-anchor="start">AdcIsr</text><text x="202" y="94" class="muted" text-anchor="start">ISR</text></g><g class="node"><title>isr PowerIsr</title><rect x="16" y="271" width="120" height="40" rx="4" class="box os-isr"/><text x="26" y="288" class="name" text-anchor="start">PowerIsr</text><text x="26" y="303" class="muted" text-anchor="start">ISR</text></g><g class="edge-group"><title>Task_5ms takes AdcSlots</title><path d="M498 82 L558 82" class="edge os-semaphore"/><path d="M558 82 L550 86 L550 78 Z" class="arrow os-semaphore"/></g><g class="edge-group"><title>Task_10ms locks NvmLock</title><path d="M523 202 L543 202 L543 277 L583 277" class="edge os-mutex"/></g><g class="edge-group"><title>Task_10ms sends LampCmd</title><path d="M523 171 L583 171" class="edge os-queue"/><path d="M583 171 L575 175 L575 167 Z" class="arrow os-queue"/></g><g class="edge-group"><title>Task_Lamp receives LampCmd</title><path d="M802 171 L862 171" class="edge os-queue"/><path d="M862 171 L854 175 L854 167 Z" class="arrow os-queue"/></g><g class="edge-group"><title>Task_Mode locks NvmLock</title><path d="M510 291 L583 291" class="edge os-mutex"/></g><g class="edge-group"><title>Task_Mode waits PowerDown</title><path d="M307 291 L380 291" class="edge os-event"/><path d="M380 291 L372 295 L372 287 Z" class="arrow os-event"/></g><g class="edge-group"><title>AdcIsr gives AdcSlots</title><path d="M312 82 L372 82" class="edge os-semaphore"/><path d="M372 82 L364 86 L364 78 Z" class="arrow os-semaphore"/></g><g class="edge-group"><title>PowerIsr sets PowerDown</title><path d="M136 291 L196 291" class="edge os-event"/><path d="M196 291 L188 295 L188 287 Z" class="arrow os-event"/></g><g class="node"><title>mutex · inherit NvmLock</title><path d="M593 264 L712 264 L722 284 L712 304 L593 304 L583 284 Z" class="os-object os-mutex"/><text x="652.5" y="281" class="name" text-anchor="middle">NvmLock</text><text x="652.5" y="296" class="muted" text-anchor="middle">mutex · inherit</text></g><g class="node"><title>semaphore · 2 AdcSlots</title><rect x="372" y="62" width="126" height="40" rx="20" class="os-object os-semaphore"/><text x="435" y="79" class="name" text-anchor="middle">AdcSlots</text><text x="435" y="94" class="muted" text-anchor="middle">semaphore · 2</text></g><g class="node"><title>queue · LampState · depth 4 LampCmd</title><rect x="583" y="151" width="219" height="40" rx="2" class="os-object os-queue"/><line x1="792" y1="151" x2="792" y2="191" class="os-slot"/><line x1="786" y1="151" x2="786" y2="191" class="os-slot"/><line x1="780" y1="151" x2="780" y2="191" class="os-slot"/><text x="681.5" y="168" class="name" text-anchor="middle">LampCmd</text><text x="681.5" y="183" class="muted" text-anchor="middle">queue · LampState · depth 4</text></g><g class="node"><title>event PowerDown</title><path d="M196 271 L297 271 L307 291 L297 311 L196 311 Z" class="os-object os-event"/><text x="251.5" y="288" class="name" text-anchor="middle">PowerDown</text><text x="251.5" y="303" class="muted" text-anchor="middle">event</text></g><g class="legend"><path d="M26 341 L40 341 L50 348 L40 355 L26 355 L16 348 Z" class="os-object os-mutex"/><text x="56" y="352" class="muted" text-anchor="start">Resource / mutex</text><rect x="182" y="341" width="34" height="14" rx="7" class="os-object os-semaphore"/><text x="222" y="352" class="muted" text-anchor="start">Semaphore</text><rect x="302" y="341" width="34" height="14" rx="2" class="os-object os-queue"/><line x1="326" y1="341" x2="326" y2="355" class="os-slot"/><line x1="320" y1="341" x2="320" y2="355" class="os-slot"/><line x1="314" y1="341" x2="314" y2="355" class="os-slot"/><text x="342" y="352" class="muted" text-anchor="start">Queue</text><path d="M395 341 L419 341 L429 348 L419 355 L395 355 Z" class="os-object os-event"/><text x="435" y="352" class="muted" text-anchor="start">Event</text></g></svg>
