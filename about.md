@@ -17,7 +17,7 @@ Little did I know I would get more and more hooked on embedded SW, eventually la
 
 I want to share with everybody who is curious some insights about the problems I have faced and the reasoning behind decisions one might need to take — partly to help you avoid my mistakes, partly because writing them down is cheaper than therapy, and partly because I'm getting older and my memory isn't what it used to be :)
 
-You can find some of the books I've read or am currently reading on the [Books](/books.html) page.
+You can find some of the books I've read or am currently reading, and the YouTube channels I like, on the [Books & Channels](/books.html) page.
 
 If you have questions, reach out to me via mail or [LinkedIn](https://www.linkedin.com/in/robert-koerner-8082a4214/) (I prefer the latter).
 
