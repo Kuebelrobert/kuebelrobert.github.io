@@ -11,6 +11,13 @@ premium_slug: securing-the-foundation-part-2-updates-bus-and-diagnostics
 
 *New to some of the words in this series (MAC, HSM, freshness, certificates, root of trust)? The two-part vocabulary explains them: [Part 1]({% post_url 2026-10-30-security-vocabulary-part-1-the-crypto-toolbox %}) is the crypto toolbox with pictures, [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}) is the lookup table for keys, hardware, boot, bus and attacks.*
 
+> **TL;DR**
+>
+> - Three doors are open by design while the ECU runs: updates, the bus and diagnostics.
+> - Updates: check before you erase, and prevent rollback.
+> - The bus: SecOC on CAN FD, plus LIN, Ethernet and the gateway.
+> - Diagnostics: give the tester control without leaving the key under the mat.
+
 In [Part 1]({% post_url 2026-10-21-securing-the-foundation-part-1-threat-model-root-of-trust-and-boot %}), we built the base: a TARA for the BCU, an HSM that keeps every key behind its firewall, a key inventory, and a boot concept that fits into the 150 ms startup budget because the keys, not the start, depend on the verification. If you skipped it, at least look at the attack surface map there. This part uses its door numbers.
 
 This part covers the three doors that are open while the ECU is running, by design: the update path, which is *supposed* to put new code into the ECU; the bus, where every ECU is supposed to talk; and diagnostics, which is supposed to give a tester control over the ECU. The question isn't how to close them. It's how to make sure only the right people get through.

@@ -11,6 +11,13 @@ premium_slug: securing-the-foundation-part-3-code-debug-immobilizer-and-detectio
 
 *New to some of the words in this series (MAC, HSM, freshness, certificates, root of trust)? The two-part vocabulary explains them: [Part 1]({% post_url 2026-10-30-security-vocabulary-part-1-the-crypto-toolbox %}) is the crypto toolbox with pictures, [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}) is the lookup table for keys, hardware, boot, bus and attacks.*
 
+> **TL;DR**
+>
+> - The doors that are easy to forget: the code itself, the debug port, the immobilizer, detection and privacy.
+> - All crypto is worthless if the code behind it has a memory bug.
+> - For the immobilizer, security is the actual function.
+> - One table at the end shows which mechanism lives where in the BCU, and what it costs.
+
 [Part 1]({% post_url 2026-10-21-securing-the-foundation-part-1-threat-model-root-of-trust-and-boot %}) built the base: TARA, HSM, keys and boot. [Part 2]({% post_url 2026-10-21-securing-the-foundation-part-2-updates-bus-and-diagnostics %}) put locks on the three doors that are open by design: updates, the bus and diagnostics. This last part is about the doors that are easy to forget: the code behind all those locks, the debug port, the immobilizer (where security isn't a protection, it's the function), noticing an attack, and the data the BCU collects without anybody asking. At the end, everything comes together in one table: which security mechanism lives where in the BCU, and what it costs.
 
 ## What's inside

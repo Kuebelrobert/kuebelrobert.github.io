@@ -8,6 +8,13 @@ tags: [security, glossary, hsm, key-management, secure-boot, secoc, uds, attacks
 
 *This is Part 2 of a two-part vocabulary for the "Securing the Foundation" series ([Part 1]({% post_url 2026-10-21-securing-the-foundation-part-1-threat-model-root-of-trust-and-boot %}), [Part 2]({% post_url 2026-10-21-securing-the-foundation-part-2-updates-bus-and-diagnostics %}) and [Part 3]({% post_url 2026-10-21-securing-the-foundation-part-3-code-debug-immobilizer-and-detection %})). [Part 1 of this vocabulary]({% post_url 2026-10-30-security-vocabulary-part-1-the-crypto-toolbox %}) explained the crypto building blocks with pictures. This part is the reference for everything around them in an ECU: attack words, keys, hardware, boot and update, bus and diagnostics, attacks, and process.*
 
+> **TL;DR**
+>
+> - A security design decides who may do what, how an ECU can tell, and what happens when it can't. This page is the lookup table for the words.
+> - The classic mistakes: the same key in every device, a MAC without freshness, a reused nonce, erase before verify.
+> - A CRC doesn't do a MAC's job, and encrypted doesn't mean signed.
+> - Keys and algorithms that can't be replaced in the field are a recall waiting to happen.
+
 If you came straight here: this is a lookup page, built from tables, and every table is meant to be read on its own. The crypto words (MAC, hash, signature, nonce, certificate) are explained in [Part 1 of this vocabulary]({% post_url 2026-10-30-security-vocabulary-part-1-the-crypto-toolbox %}). If you only have a minute, this is the whole of it:
 
 | Tool | In one line | Part 1 |

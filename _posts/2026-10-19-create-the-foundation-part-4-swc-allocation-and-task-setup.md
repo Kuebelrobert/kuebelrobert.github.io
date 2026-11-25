@@ -8,6 +8,13 @@ tags: [architecture, project-foundation, swc-allocation, task-design, rtos, auto
 
 *This is Part 4, the closing part of a series on laying the foundation for a new ECU project. [Part 1]({% post_url 2026-08-30-create-the-foundation-part-1-requirements-and-thinking %}) covered requirements research and the thinking process; [Part 2]({% post_url 2026-09-03-create-the-foundation-part-2-memory-mapping-and-partitioning %}) covered memory mapping and partitioning; [Part 3]({% post_url 2026-09-04-create-the-foundation-part-3-protection-allocation-and-cpu-load %}) covered memory protection; this part covers SWC allocation, a first CPU budget and a first task setup.*
 
+> **TL;DR**
+>
+> - Allocate software components by ASIL first, then by communication locality.
+> - Base the first CPU budget on comparable projects and keep 30-40 % headroom at this early stage.
+> - Size stacks from the worst-case call depth, and write assumptions down with a date.
+> - The post ends with a first task setup for six cores and the brake light traced from end to end.
+
 So far, our BCU has a memory map the hardware can actually enforce and a protection concept that keeps QM away from ASIL B — cores, DMA, peripherals and all. What it doesn't have yet is software in it. One simplex ASIL B core and five QM cores, all of them empty, all of them waiting for somebody to decide what goes where — and, just as important, *when* it runs.
 
 That's three decisions: which software component lives on which core, whether the CPU can actually carry it, and how each core's work is cut into tasks. Let's make all three, at least as a first draft you can defend in a review.

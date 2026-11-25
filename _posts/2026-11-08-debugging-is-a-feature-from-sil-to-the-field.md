@@ -11,6 +11,13 @@ tags: [debugging, diagnostics, sil, pil, hil, field, reset-counter, hardfault, d
 
 *The example in this post is the body control unit (BCU) from the [foundation series]({% post_url 2026-10-19-create-the-foundation-part-4-swc-allocation-and-task-setup %}): a Cortex-M7 with an ASIL B core and QM cores, running AUTOSAR-style software on ThreadX as in [Running AUTOSAR on ThreadX]({% post_url 2026-10-20-running-autosar-on-threadx-part-1-os-and-execution-model %}).*
 
+> **TL;DR**
+>
+> - Debugging in the field happens with functions you built in years earlier, not with a debugger.
+> - The building blocks: reset history, trap records, supervision events, extended DTC data, a flight recorder and runtime counters.
+> - Use one record format from SIL to the field, include production, and protect the data.
+> - AI assistants and MCP servers help only as much as the data you prepared, with read-only access by default.
+
 Here's a bug report every embedded team has received in some form: *"Customer complaint: interior light flickers, then everything is dead for two seconds. Happened three times in four weeks. Workshop found no stored fault. ECU replaced, returned part shows no fault found."*
 
 Translated: the BCU reset. Probably a watchdog, maybe a trap, maybe a brown-out. It happened weeks ago, in a car you'll never see, on a part whose debug port is locked, and since then the ECU has started up a few hundred times. Whatever the software didn't record at that moment is gone. No debugger, no trace, no luck.

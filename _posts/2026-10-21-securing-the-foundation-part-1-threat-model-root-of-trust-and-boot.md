@@ -12,6 +12,13 @@ tags: [security, tara, iso-21434, hsm, key-management, secure-boot, fault-inject
 
 *Quick recap of the BCU from the foundation series: [Part 1]({% post_url 2026-08-30-create-the-foundation-part-1-requirements-and-thinking %}) (requirements), [Part 2]({% post_url 2026-09-03-create-the-foundation-part-2-memory-mapping-and-partitioning %}) (memory map), [Part 3]({% post_url 2026-09-04-create-the-foundation-part-3-protection-allocation-and-cpu-load %}) (memory protection) and [Part 4]({% post_url 2026-10-19-create-the-foundation-part-4-swc-allocation-and-task-setup %}) (SWC allocation and tasks). If you haven't read them, the short version: six Cortex-M7 cores, one simplex ASIL B core for exterior lighting, five QM cores for everything else, an HSM with its own firewalled flash, and no A/B swap.*
 
+> **TL;DR**
+>
+> - Safety protects the car from its own mistakes, security from somebody who makes them happen on purpose.
+> - A TARA tells you what's worth protecting and where to stop.
+> - The HSM never hands out a key. A compromised core can't read it, but it can still ask the HSM to use it.
+> - Boot concept: the ECU starts without waiting, and only the release of the keys depends on the verification. That fits into the start-up budget.
+
 In foundation Part 3, I hid a side note in the middle of the MPU chapter: *safety is not security, that's a post of its own.* Side notes like that are promises. This is me keeping one.
 
 The difference fits in one sentence. Safety protects the car from its own mistakes. Security protects it from somebody who makes mistakes happen on purpose. A bit flip doesn't read your source code, doesn't wait for the one millisecond your check is skipped, and doesn't come back next week with a better tool. An attacker does all three. So everything we built in the foundation series (default-deny, E2E, mailboxes, watchdogs) is a good start, but it was designed against faults that are random and don't try to get past you.

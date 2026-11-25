@@ -11,11 +11,18 @@ tags: [security, glossary, cryptography, mac, hmac, cmac, aes, ecdsa, diffie-hel
 
 *This is Part 1 of a two-part vocabulary for the "Securing the Foundation" series ([Part 1]({% post_url 2026-10-21-securing-the-foundation-part-1-threat-model-root-of-trust-and-boot %}), [Part 2]({% post_url 2026-10-21-securing-the-foundation-part-2-updates-bus-and-diagnostics %}) and [Part 3]({% post_url 2026-10-21-securing-the-foundation-part-3-code-debug-immobilizer-and-detection %})). This part explains the crypto building blocks, from zero, with pictures. [Part 2]({% post_url 2026-11-01-security-vocabulary-part-2-keys-hardware-and-the-ecu %}) is the reference for everything around them in an ECU: keys, hardware, boot, bus, attacks and process.*
 
+> **TL;DR**
+>
+> - A **hash** is a keyless fingerprint of data. A **MAC** is one that only key holders can make.
+> - A counter or challenge inside the MAC makes it single-use.
+> - A **signature** is made by one party and checked by everybody. A **certificate** says whose key it is.
+> - **Encryption** hides the content, and none of the others do. A cheat sheet is at the end.
+
 Security meetings have a failure mode I know well. Someone says "we'll just add a MAC", half the room nods, and the other half quietly wonders whether that's the thing in the Ethernet frame. (It isn't. Not here. MACsec manages to use both meanings in one protocol, which feels unfair.) In this post, **MAC always means message authentication code**, and by the end you'll know what it does, what it doesn't, and why people keep asking about the key.
 
 This is written for the second half of that room: embedded engineers who are good at C, buses and timing, and who were never forced to learn what a hash is. No proofs, no number theory. (The index page of this blog promises "war stories, not tutorials". Consider this the one exception, and a war story needs a map.) If you already know the crypto, jump to [the cheat sheet](#the-toolbox-on-one-page) at the end and come back when something looks suspicious.
 
-**The five-line version, if you read nothing else:** a **hash** is a fingerprint of data, with no key. A **MAC** is a fingerprint that only key holders can make, like a wax seal. A **counter or challenge** inside the MAC makes it single-use. A **signature** is a seal that one party can create and everybody can check. **Encryption** hides the content, and none of the others do. Everything below is the detail, the pictures, and the ways it goes wrong.
+The TL;DR above is the whole story in four lines. Everything below is the detail, the pictures, and the ways it goes wrong.
 
 ## The story: a key fob, a car and an attacker
 

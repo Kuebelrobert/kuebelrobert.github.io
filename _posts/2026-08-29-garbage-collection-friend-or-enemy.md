@@ -11,6 +11,13 @@ tags: [garbage-collection, flash-memory, wear-leveling, nvm, firmware-update]
 
 Garbage collection or in short GC is a mechanism that takes care of "cleaning up" old, invalidated flash data so new data can be written. Before garbage collection can step into action, I need to explain why we need this clean-up at all.
 
+> **TL;DR**
+>
+> - Flash can't be overwritten in place. Garbage collection (GC) copies valid data to a clean sector and erases the old one, and that takes time.
+> - GC can hit in the middle of a flash sequence, because every progress marker in NVM is another write.
+> - Suppressing GC completely only postpones the problem. Give it a *budget* at defined points between block writes.
+> - Keep timeouts and a validated backup image anyway. An ADR with the decision is linked in the post.
+
 A car stores values like operating-hour counters, mileage, or calibration offsets for sensors inside its data flash. Over the lifecycle of the car, these values change from time to time — due to firmware updates or the recalibration of sensor data. They are typically required to be non-volatile, meaning they need to survive the ECU going into a power-down.
 
 RAM cells normally lose their content once power is removed, while flash is able to retain it even after the whole microcontroller is without supply. There are several types of non-volatile memory, but I'll focus on NOR flash here, since it's the type most commonly built directly into automotive microcontrollers — as opposed to NAND flash, which you'll more commonly find in mass-storage devices like SD cards or SSDs.

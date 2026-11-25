@@ -8,6 +8,13 @@ tags: [architecture, project-foundation, technical-debt, security, communication
 
 *This is Part 1 of a series on laying the foundation for a new ECU project. Part 1 covers requirements research and the thinking process; [Part 2]({% post_url 2026-09-03-create-the-foundation-part-2-memory-mapping-and-partitioning %}) covers memory mapping and partitioning; [Part 3]({% post_url 2026-09-04-create-the-foundation-part-3-protection-allocation-and-cpu-load %}) covers memory protection — MPU, bus masters and peripherals; [Part 4]({% post_url 2026-10-19-create-the-foundation-part-4-swc-allocation-and-task-setup %}) covers SWC allocation, a first CPU budget and a first task setup.*
 
+> **TL;DR**
+>
+> - Don't start a new ECU by forking an old project and its technical debt. Start with requirements, even if some are assumptions.
+> - Six topics shape the foundation: security, communication, updateability, diagnostics, low power with start-up time, and memory protection hardware.
+> - Each of them becomes a constraint on the memory map.
+> - Write assumptions down as assumptions, so you can revise them on purpose.
+
 Starting a new ECU project typically begins with compiling code for an A-Sample without much in the way of requirements — usually just the purpose of the ECU (BCU, Gateway, BMS, etc.) and, if you're lucky, a derived ASIL (the automotive safety integrity level).
 
 The first priority is getting a first commissioning of the individual parts — the microcontroller, the safety companion chip, sensors and actuators — via IO testing to confirm the PCB wiring is correct, setting up a test environment like a HIL, and taking first measurements on how the sensors and actuators behave in real life.

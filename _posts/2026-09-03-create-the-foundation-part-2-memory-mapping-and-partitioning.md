@@ -9,6 +9,13 @@ premium_slug: create-the-foundation-part-2-memory-mapping-and-partitioning
 
 *This is Part 2 of a series on laying the foundation for a new ECU project. [Part 1]({% post_url 2026-08-30-create-the-foundation-part-1-requirements-and-thinking %}) covered requirements research and the thinking process; this part covers memory mapping and partitioning; [Part 3]({% post_url 2026-09-04-create-the-foundation-part-3-protection-allocation-and-cpu-load %}) covers memory protection — MPU, bus masters and peripherals; [Part 4]({% post_url 2026-10-19-create-the-foundation-part-4-swc-allocation-and-task-setup %}) covers SWC allocation, a first CPU budget and a first task setup.*
 
+> **TL;DR**
+>
+> - The requirements from Part 1 become a memory map: flash blocks, RAM per core, and memory that survives a reset.
+> - The map is generated from a YAML file, and a script checks it before it draws anything.
+> - Immutable blocks come first, then the updatable ones. Some reserved blocks exist only because of the MPU rules.
+> - Not every requirement is written down, and some points stay open for the next parts.
+
 In [Part 1]({% post_url 2026-08-30-create-the-foundation-part-1-requirements-and-thinking %}), we picked our microcontroller: an ARM Cortex-M7-based automotive MCU, six cores at around 300 MHz, configured for our ASIL B project as one simplex ASIL B core plus five independent QM cores — instead of burning a core on lockstep redundancy we don't need. We also gathered security (a root of trust), updateability (independently updatable blocks), communication (a ComStack reachable from multiple components), diagnostics (somewhere persistent to live), low power and startup time (an always-on ECU that has to talk early), and the rules of our memory protection hardware (8 or 16 MPU regions per core, each one a power of two, aligned to its own size) as requirements. None of that is a memory map yet. This is where we turn it into one.
 
 ## What's inside

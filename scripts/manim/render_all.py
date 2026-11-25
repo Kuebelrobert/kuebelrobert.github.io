@@ -5,18 +5,20 @@ Render manim scenes at 720p30 and copy the MP4s to assets/videos/<set>/<scene-na
 Sets:
     threadx   autosar_threadx_scenes.py -> assets/videos/autosar-threadx/
     security  security_scenes.py        -> assets/videos/embedded-security/
+    communication  communication_scenes.py -> assets/videos/communication/
+    scheduling     scheduling_scenes.py     -> assets/videos/scheduling/
+    ethernet       ethernet_scenes.py       -> assets/videos/automotive-ethernet/
 
 Usage (from the repo root):
     python3 scripts/manim/render_all.py                  # every set
     python3 scripts/manim/render_all.py security         # one set
     python3 scripts/manim/render_all.py security BootTimeline [...]   # single scenes
 
-Requires manim (pip install manim). Intermediate files go to a temp directory.
+Requires manim (pip install manim) and ffmpeg. Intermediate files go to a temp directory.
 
 Scenes of members-only articles live in the private repo (render_premium.py there).
 """
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -29,6 +31,14 @@ SETS = {
                 ["EventsToThreads", "ResourceVsMutex", "IocCrossCore"]),
     "security": (HERE / "security_scenes.py", ROOT / "assets" / "videos" / "embedded-security",
                  ["HsmJobInterface", "BootTimeline"]),
+    "communication": (HERE / "communication_scenes.py", ROOT / "assets" / "videos" / "communication",
+                      ["CanArbitration", "SwitchLatency", "FrameOverhead"]),
+    "ethernet": (HERE / "ethernet_scenes.py", ROOT / "assets" / "videos" / "automotive-ethernet",
+                 ["SdvArchitectures", "FrameTypes", "SwitchLearning", "ArpResolution", "RouterHop",
+                  "ServiceDiscovery", "GptpSync", "GptpBridges", "CreditBasedShaper", "TimeAwareShaper"]),
+    "scheduling": (HERE / "scheduling_scenes.py", ROOT / "assets" / "videos" / "scheduling",
+                   ["ComputeArchitectures", "LatencyVsThroughput", "GangVsPipeline",
+                    "SharedResourceInterference", "AcceleratorPreemption", "BudgetModes"]),
 }
 
 
@@ -44,7 +54,9 @@ def render(src, out, scenes):
                             str(src), scene], check=True)
             mp4 = next(Path(media).rglob(f"720p30/{scene}.mp4"))
             dst = out / f"{kebab(scene)}.mp4"
-            shutil.copy(mp4, dst)
+            # Index (moov) first: Chrome fails on jekyll serve when it has to seek to the end for it.
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(mp4), "-c", "copy",
+                            "-movflags", "+faststart", str(dst)], check=True)
             print(f"Wrote {dst.relative_to(ROOT)} ({dst.stat().st_size // 1024} KB)")
 
 

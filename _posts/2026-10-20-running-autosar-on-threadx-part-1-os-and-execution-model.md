@@ -8,6 +8,13 @@ tags: [architecture, autosar, rte, threadx, rtos, multicore, migration, asil]
 
 *This is Part 1 of a two-part post on running AUTOSAR components on ThreadX. This part covers the OS side: runnables, tasks, resources, alarms, interrupts, hooks, and everything multicore. [Part 2]({% post_url 2026-10-21-running-autosar-on-threadx-part-2-rte-communication-and-bsw %}) covers RTE communication, basic software, and what the whole exercise costs you.*
 
+> **TL;DR**
+>
+> - Keep the AUTOSAR components and the RTE API, replace what sits underneath with a shim on ThreadX.
+> - Most of the OS maps natively or with a thin shim. Preemption-threshold covers internal resources.
+> - Cross-core communication, spinlocks and timing protection have to be built, and they're the hard part on any OS.
+> - A summary table rates every mechanism as native, shim or build.
+
 Sooner or later, every embedded architect hears some version of this sentence: "We have all these AUTOSAR components already — can't we just run them on ThreadX?" Sometimes it's a QM core that doesn't justify another AUTOSAR license, sometimes a prototype that has to run next week, sometimes a customer who wants an AUTOSAR *architecture* but a different OS underneath. The question is always the same: how much of AUTOSAR can you rebuild on a plain RTOS, and what does it cost?
 
 Short answer: almost all of it. Long answer: this post and the next one. I went through the AUTOSAR Classic mechanisms one by one — runnables and RTE events, OS tasks and resources, alarms, IOC, partitions, timing protection in this part; sender-receiver in all its flavors, client-server and modes in Part 2 — and mapped each one onto ThreadX. Every mapping gets a rating:

@@ -9,6 +9,13 @@ premium_slug: running-autosar-on-threadx-part-2-rte-communication-and-bsw
 
 *This is Part 2 of a two-part post on running AUTOSAR components on ThreadX. [Part 1]({% post_url 2026-10-20-running-autosar-on-threadx-part-1-os-and-execution-model %}) covered the OS side: runnables and RTE events, tasks, resources, alarms, interrupts and multicore. This part covers RTE communication, basic software, and the bill at the end.*
 
+> **TL;DR**
+>
+> - The generated RTE headers stay the contract; a shim fulfills it with ThreadX primitives.
+> - Covered: sender-receiver (unqueued and queued, implicit and explicit), client-server, mode management and basic software.
+> - Every mechanism is rated as native, shim or build.
+> - The post ends with what you lose without the AUTOSAR toolchain, and how to win some of it back.
+
 Quick recap of the idea from Part 1: the components stay exactly as they are, including every `Rte_Read` and `Rte_Call`. The generated RTE API headers stay the contract; underneath, a generated shim fulfills that contract with ThreadX primitives. Every mechanism gets a rating:
 
 - **Native** — ThreadX has a primitive that does the job.

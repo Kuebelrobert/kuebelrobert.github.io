@@ -11,6 +11,13 @@ tags: [autosar, ardl, toolchain, arxml, qemu, threadx, tracing, perfetto, import
 
 *This is Part 2 of a two-part post on ARDL. [Part 1]({% post_url 2026-11-06-ardl-part-1-design-as-code-for-autosar-classic %}) covered the idea, the checker, the OS view and how to start a project. This part runs the model on QEMU, draws the tasks and ISRs from a real trace, and shows how ARDL could handle AUTOSAR deliveries from an OEM when you build OS and BSW yourself: what it can do, and what is missing.*
 
+> **TL;DR**
+>
+> - The modeled BCU also runs on QEMU, with a self-test and a trace of tasks and ISRs.
+> - For teams that get application software from an OEM and build OS and BSW themselves, ARDL could be the readable layer over ARXML.
+> - Missing today: ARXML import and export, data types and com specs, contract headers, bus mapping and packages.
+> - Proposed order: a read-only import first, because readable delivery diffs help at once.
+
 A quick recap for people who skipped Part 1: [ARDL](https://marketplace.visualstudio.com/items?itemName=kuebelrobert.ardl) is a small VS Code extension that describes the structure of an AUTOSAR Classic system as text (interfaces, components, compositions, BSW modules, OS tasks and ISRs), checks the structural rules and draws the diagrams from the same model. It has no timing model, no code generator and, so far, no ARXML import or export. This part closes the first gap with a real run, and looks at what the import and export would have to do for a team that receives the application software from an OEM.
 
 ## From the model to a running system: QEMU and a trace

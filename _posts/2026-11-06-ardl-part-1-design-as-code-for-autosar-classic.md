@@ -7,6 +7,13 @@ tags: [autosar, ardl, design-as-code, workflow, vscode, architecture, checks]
 ---
 *This is Part 1 of a two-part post on ARDL. This part covers the idea, the checker, the OS view and how to set up a project with it. [Part 2]({% post_url 2026-11-06-ardl-part-2-from-model-to-qemu-trace-and-the-import-export-plan %}) covers the QEMU run, the trace visualization and how ARDL could work with ARXML deliveries from an OEM.*
 
+> **TL;DR**
+>
+> - ARDL describes the structure of an AUTOSAR Classic system as text in git and draws the diagrams from it.
+> - A checker finds structural mistakes, and it runs in CI.
+> - It's not a configuration tool, not a code generator, not a timing tool and not qualified.
+> - Start with a slice of the ECU, not with the whole one.
+
 Every AUTOSAR project has an architecture. Where it lives is the interesting question. In my experience it lives in four places at once: a slide deck from the kickoff, an ARXML file nobody dares to open without a tool, a configuration tool nobody dares to close, and the head of one colleague who is, naturally, on vacation.
 
 I wanted a fifth place, and a boring one: **a text file in git**. This post is about that file format, [ARDL](https://marketplace.visualstudio.com/items?itemName=kuebelrobert.ardl) (AUTOSAR Design Language), a small VS Code extension I built for myself and then made public. This part covers what it is for, what it checks, how I use it to set up a project, and where it stops. [Part 2]({% post_url 2026-11-06-ardl-part-2-from-model-to-qemu-trace-and-the-import-export-plan %}) closes the loop with a QEMU run and a task/ISR trace, and lays out what I want to build next: import and export, because a design language that can't talk to ARXML is a hobby, and I'd like it to be at least a well-organized hobby.
