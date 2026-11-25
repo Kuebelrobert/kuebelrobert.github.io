@@ -81,5 +81,5 @@ acceptance_criteria:
 
 ## Related
 
-- Post: [`_posts/2026-08-29-garbage-collection-friend-or-enemy.md`](../_posts/2026-08-29-garbage-collection-friend-or-enemy.md) ("Garbage Collection — friend or enemy")
+- Post: [`_posts/2026-08-29-garbage-collection-friend-or-enemy.md`](../_posts/2026-08-29-garbage-collection-friend-or-enemy.md) ("Garbage Collection — blessing or curse")
 - Depends on: the NVM/FEE stack's own atomicity guarantees across power loss — out of scope here

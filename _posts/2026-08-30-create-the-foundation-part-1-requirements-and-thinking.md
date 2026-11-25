@@ -114,7 +114,7 @@ By now you should have a rough, honestly-assumed-where-necessary picture of your
 
 In [Part 2]({% post_url 2026-09-03-create-the-foundation-part-2-memory-mapping-and-partitioning %}), we'll take exactly this BCU example and actually draw the memory map — flash layout, RAM partitioning across the ASIL B core and the five QM cores, and the reasoning behind where each of today's requirements ends up living.
 
-Meanwhile, your colleagues are already fighting their first battles with bring-up SW — because getting the chance to debug on real hardware is a game changer, and nobody's going to wait for your memory map to be perfect before they start.
+Meanwhile, your colleagues are already wrestling with their first bring-up SW — because getting the chance to debug on real hardware is a game changer, and nobody's going to wait for your memory map to be perfect before they start.
 
 ## Sources and further reading
 

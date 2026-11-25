@@ -92,11 +92,11 @@ TSN (Time-Sensitive Networking) is a set of tools. You don't climb them like a l
 | 2 | Emergency lane | Several queues, strict priority | It overtakes in the queue |
 | 3 | Ramp meter at the highway | Credit-based shaper (802.1Qav) | A class of streams gets its bandwidth, evenly spread, and no more |
 | 4 | The truck pulls over mid-trip | Frame preemption (802.1Qbu, 802.3br) | A long frame blocks only until the next fragment |
-| 5 | Road closed for a convoy, by timetable | Time-aware shaper (802.1Qbv) | A fixed time slot, calculable latency |
+| 5 | Road closed for a heavy transport, by timetable | Time-aware shaper (802.1Qbv) | A fixed time slot, calculable latency |
 
 **Priority is only a mark.** On Linux, an application can set priority 5 and the frame still leaves with PCP 0, if nobody has configured the mapping. On an AUTOSAR ECU the same gap can sit between socket and VLAN configuration. From the component to the tag to the queue, every step has to be configured, and PCP ends at the router. Behind the gateway, the mapping has to be made again, for example from the DSCP field in the IP header.
 
-**The shaper tames bursts.** A camera that sends a whole image at once blocks the port for everyone below it. The credit-based shaper (CBS) gives the queue an account, like a toll tag with a balance: you may pass the barrier while you aren't in debt. A large truck puts you deep into the red, and the balance recovers at a fixed rate. Nobody can pay in advance for a convoy.
+**The shaper tames bursts.** A camera that sends a whole image at once blocks the port for everyone below it. The credit-based shaper (CBS) gives the queue an account, like a toll tag with a balance: you may pass the barrier while you aren't in debt. A large truck puts you deep into the red, and the balance recovers at a fixed rate. Nobody can pay in advance for a whole fleet.
 
 Four rules describe the credit:
 

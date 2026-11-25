@@ -155,7 +155,7 @@ Both are differential and run on twisted pairs in production cars, and both are 
 
 ### Diagnostics and flashing
 
-**This is Ethernet's killer feature for most ECUs.** Over CAN FD, ISO-TP moves well under 1 Mbit/s of useful data, and a few megabytes of software take minutes. Over DoIP at 100 Mbit/s, the bus stops being the bottleneck and the flash write speed becomes the limit. For end-of-line flashing in the plant, workshop updates and over-the-air updates distributed inside the car, that's a big difference in time and cost.
+**This is Ethernet's strongest argument for most ECUs.** Over CAN FD, ISO-TP moves well under 1 Mbit/s of useful data, and a few megabytes of software take minutes. Over DoIP at 100 Mbit/s, the bus stops being the bottleneck and the flash write speed becomes the limit. For end-of-line flashing in the plant, workshop updates and over-the-air updates distributed inside the car, that's a big difference in time and cost.
 
 ### Software effort and resources
 

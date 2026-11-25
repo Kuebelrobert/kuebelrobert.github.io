@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Garbage Collection - friend or enemy"
+title: "Garbage Collection - blessing or curse"
 date: 2026-08-29
 categories: [Flashing]
 tags: [garbage-collection, flash-memory, wear-leveling, nvm, firmware-update]

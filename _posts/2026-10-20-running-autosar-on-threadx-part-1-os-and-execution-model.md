@@ -240,7 +240,7 @@ AUTOSAR OS rejects calls from the wrong context (`WaitEvent` from an ISR, `Termi
 | Trusted / non-trusted function calls | Request queues across partitions | Shim |
 | Timing protection | Runtime accounting + monitor + watchdog | Build |
 
-The OS side holds up well: most of OSEK maps onto ThreadX natively or with a thin shim, and preemption-threshold turns out to be the secret weapon for internal resources and the priority ceiling. What's left — cross-core communication, spinlocks, timing protection — is exactly the part that's hard everywhere.
+The OS side holds up well: most of OSEK maps onto ThreadX natively or with a thin shim, and preemption-threshold turns out to be the hidden gem for internal resources and the priority ceiling. What's left — cross-core communication, spinlocks, timing protection — is exactly the part that's hard everywhere.
 
 ## Next up
 

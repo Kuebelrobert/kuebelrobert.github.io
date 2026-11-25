@@ -234,7 +234,7 @@ Not all of them are from other people's projects.
 7. **A weak random seed.** Same seed after every reset means same "random" numbers after every reset.
 8. **The failed-attempt counter in RAM.** A delay in RAM isn't a delay, it's a power cycle.
 9. **Erase first, verify later.** Anybody who can start a flash session can brick the ECU with random bytes. Verify before erasing.
-10. **A CRC doing a MAC's job.** Or the other way round, a QM MAC used as the safety argument. Different mechanisms for different enemies.
+10. **A CRC doing a MAC's job.** Or the other way round, a QM MAC used as the safety argument. Different mechanisms for different problems.
 11. **No way out.** Keys and algorithms that cannot be replaced in a deployed vehicle are a recall waiting for a trigger.
 12. **Encrypted is not signed.** Encrypting a firmware image keeps it private. It doesn't keep it from being replaced.
 

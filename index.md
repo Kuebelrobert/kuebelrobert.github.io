@@ -10,9 +10,9 @@ Expect posts on security, flashing and bootloaders, communication protocols, RTO
 
 A few things you can count on:
 
-- **War stories, not tutorials.** If you already know what a mutex is, you're in the right place.
-- **Real trade-offs.** Every "best practice" here survived contact with a deadline, a supply-chain shortage, or a customer who moved the goalposts.
-- **Zero company names.** All the war stories are anonymized — the lessons are real, the employers are not identifiable.
+- **Field stories, not tutorials.** If you already know what a mutex is, you're in the right place.
+- **Real trade-offs.** Every "best practice" here has met a real deadline, a supply-chain shortage, or a customer who moved the goalposts.
+- **Zero company names.** All the field stories are anonymized — the lessons are real, the employers are not identifiable.
 
 New here? Start with the [categories](/categories.html) page to browse by topic, or check [About](/about.html) to find out who's writing this and why they have opinions about garbage collection.
 

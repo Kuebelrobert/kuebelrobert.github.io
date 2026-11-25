@@ -128,7 +128,7 @@ One place where you can import almost everything unchanged: the infrastructure *
 - Hardware-in-the-loop benches, which are scarce, expensive and shared, a perfect case for queues, reservations and priorities.
 - Data processing for recorded drives.
 
-Here, gang scheduling (multi-GPU training, parallel simulation with synchronized steps), bin-packing, preemption of low-priority jobs and plain old fair-share queues are exactly the right tools. Nobody dies if the nightly regression runs late, and the cluster people have been solving this for years. Borrow shamelessly.
+Here, gang scheduling (multi-GPU training, parallel simulation with synchronized steps), bin-packing, preemption of low-priority jobs and plain old fair-share queues are exactly the right tools. Nobody gets hurt if the nightly regression runs late, and the cluster people have been solving this for years. Borrow shamelessly.
 
 ## Takeaways
 
